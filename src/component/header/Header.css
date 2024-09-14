@@ -1,0 +1,76 @@
+body {
+    font-size: 12px;
+}
+
+.app-menu .btn-group-panel {
+    display: inline-block;
+    border-right: 1px solid #ccc;
+    padding-right: 5px;
+}
+
+#app-menu .btn-group {
+    padding: 10px
+}
+
+#app-menu .btn-group-footer {
+    text-align: center;
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+
+.fa-1_6x {
+    font-size: 1.6em;
+}
+
+#app-menu .btn-label {
+    display: block;
+    font-size: 12px;
+}
+
+.nav-tabs {
+    border-bottom: 2px solid #DDD;
+}
+
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:focus,
+.nav-tabs>li.active>a:hover {
+    border-width: 0;
+}
+
+.nav-tabs>li>a {
+    border: none;
+    color: #666;
+}
+
+.nav-tabs>li.active>a,
+.nav-tabs>li>a:hover {
+    border: none;
+    color: #4285F4 !important;
+    background: transparent;
+}
+
+.nav-tabs>li>a::after {
+    content: "";
+    background: #4285F4;
+    height: 2px;
+    position: absolute;
+    width: 100%;
+    left: 0px;
+    bottom: -1px;
+    transition: all 250ms ease 0s;
+    transform: scale(0);
+}
+
+.nav-tabs>li.active>a::after,
+.nav-tabs>li:hover>a::after {
+    transform: scale(1);
+}
+
+.tab-nav>li>a::after {
+    background: #21527d none repeat scroll 0% 0%;
+    color: #fff;
+}
+
+.card {
+    border: 1px solid #ccc;
+}

@@ -1,0 +1,10 @@
+.menubar{
+    width: 100%;
+    background-color: aliceblue;
+    border-radius: 2px;
+    border-color: green;
+}
+.menutext{
+    color: blue;
+    text-decoration: none;
+}
