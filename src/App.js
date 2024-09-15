@@ -1,13 +1,21 @@
 import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Employee from './component/Employee';
+import Login from './component/login';
+import Ticket from './component/Ticket';
 
 function App() {
   return (
-    <div className="App">
-     <div>
-      Payroll Managemnet System1
-     </div>
-    </div>
+    <BrowserRouter>
+    <Routes>
+        <Route path="/" element={<Login />}></Route>
+        <Route path="/employee" exact={true} element={<Employee />}></Route>
+        <Route path="/addTicket" exact={true} element={<Ticket />}></Route>
+      
+      </Routes>
+    
+    </BrowserRouter>
   );
 }
 

@@ -20,15 +20,15 @@ function Header() {
                                     <Navbar.Collapse id="basic-navbar-nav">
                                         <Nav className='me-auto'>
                                             <div className='menubox'>
-                                                <Nav.Link href='dashboard'><img src={homeIcon} className='imgclass'></img><div className='menu-text'>Home</div>
+                                                <Nav.Link href='home'><img src={homeIcon} className='imgclass'></img><div className='menu-text'>Home</div>
                                                 </Nav.Link>
                                             </div>
                                             <div className='menubox'>
-                                                <Nav.Link href='dashboard'><img src={homeIcon} className='imgclass'></img><div className='menu-text'>Home</div>
+                                                <Nav.Link href='employee'><img src={homeIcon} className='imgclass'></img><div className='menu-text'>Employee</div>
                                                 </Nav.Link>
                                             </div>
                                             <div className='menubox'>
-                                                <Nav.Link href='dashboard'><img src={homeIcon} className='imgclass'></img><div className='menu-text'>Home</div>
+                                                <Nav.Link href='addTicket'><img src={homeIcon} className='imgclass'></img><div className='menu-text'>Ticket</div>
                                                 </Nav.Link>
                                             </div>
                                             <div className='menubox'>

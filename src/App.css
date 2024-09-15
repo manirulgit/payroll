@@ -12,5 +12,10 @@ body {
 .container {
   padding: 16px;
 }
+.pagination a.active {
+  background-color: #298fbc;
+  color: white;
+  border: 1px solid #298fbc;
+}
 
 

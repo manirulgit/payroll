@@ -7,7 +7,6 @@ function Login() {
         <div>
             <Header/>
             <Nabvar/>
-            
         </div>
 
     );
