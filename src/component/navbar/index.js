@@ -1,6 +1,8 @@
 import { Container, Nav, Navbar } from 'react-bootstrap';
-import "./Navbar.css";
+import { AiOutlinePayCircle } from "react-icons/ai";
+import { CiEdit } from "react-icons/ci";
 
+import "./Navbar.css";
 
 function Nabvar() {
     const style = { color: "black", fontSize: 1 }
@@ -11,11 +13,54 @@ function Nabvar() {
                 <div className='menubar'>
                     <ui className="nav nav-pills flex-coloumn">
                         <li className='nav-item'>
-                            <span className='menuBar'><a href='' className='nav-link-active'><span className='menutext'></span>Payroll</a></span>
-                        </li>
+                            <span><CiEdit  className='iconstyle'/><a href='' className='nav-link-active'><span className='menutext'>Payroll</span></a></span>
+                        </li> &nbsp;&nbsp;
                         <li className='nav-item'>
-                            <span><a href='' className='nav-link-active'><span className='menutext'></span> Payroll</a></span>
-                        </li>
+                            <span><CiEdit  className='iconstyle'/><a href='' className='nav-link-active'><span className='menutext'>Payroll</span></a></span>
+                        </li> &nbsp;&nbsp;
+                        <li className='nav-item'>
+                            <span><CiEdit  className='iconstyle'/><a href='' className='nav-link-active'><span className='menutext'>Payroll</span></a></span>
+                        </li> &nbsp;&nbsp;
+                        <li className='nav-item'>
+                            <span><CiEdit  className='iconstyle'/><a href='' className='nav-link-active'><span className='menutext'>Payroll</span></a></span>
+                        </li> &nbsp;&nbsp;
+                        <li className='nav-item'>
+                            <span><CiEdit  className='iconstyle'/><a href='' className='nav-link-active'><span className='menutext'>Payroll</span></a></span>
+                        </li> &nbsp;&nbsp;
+                        <li className='nav-item'>
+                            <span><CiEdit  className='iconstyle'/><a href='' className='nav-link-active'><span className='menutext'>Payroll</span></a></span>
+                        </li> &nbsp;&nbsp;
+                        <li className='nav-item'>
+                            <span><CiEdit  className='iconstyle'/><a href='' className='nav-link-active'><span className='menutext'>Payroll</span></a></span>
+                        </li> &nbsp;&nbsp;
+                        <li className='nav-item'>
+                            <span><CiEdit  className='iconstyle'/><a href='' className='nav-link-active'><span className='menutext'>Payroll</span></a></span>
+                        </li> &nbsp;&nbsp;
+                        <li className='nav-item'>
+                            <span><CiEdit  className='iconstyle'/><a href='' className='nav-link-active'><span className='menutext'>Payroll</span></a></span>
+                        </li> &nbsp;&nbsp;
+                        <li className='nav-item'>
+                            <span><CiEdit  className='iconstyle'/><a href='' className='nav-link-active'><span className='menutext'>Payroll</span></a></span>
+                        </li> &nbsp;&nbsp;
+                        <li className='nav-item'>
+                            <span><CiEdit  className='iconstyle'/><a href='' className='nav-link-active'><span className='menutext'>Payroll</span></a></span>
+                        </li> &nbsp;&nbsp;
+                        <li className='nav-item'>
+                            <span><CiEdit  className='iconstyle'/><a href='' className='nav-link-active'><span className='menutext'>Payroll</span></a></span>
+                        </li> &nbsp;&nbsp;
+                        <li className='nav-item'>
+                            <span><CiEdit  className='iconstyle'/><a href='' className='nav-link-active'><span className='menutext'>Payroll</span></a></span>
+                        </li> &nbsp;&nbsp;
+                        <li className='nav-item'>
+                            <span><CiEdit  className='iconstyle'/><a href='' className='nav-link-active'><span className='menutext'>Payroll</span></a></span>
+                        </li> &nbsp;&nbsp;
+                        <li className='nav-item'>
+                            <span><CiEdit  className='iconstyle'/><a href='' className='nav-link-active'><span className='menutext'>Payroll</span></a></span>
+                        </li> &nbsp;&nbsp;
+                        <li className='nav-item'>
+                            <span><CiEdit  className='iconstyle'/><a href='' className='nav-link-active'><span className='menutext'>Payroll</span></a></span>
+                        </li> &nbsp;&nbsp;
+                       
                     </ui>
                 </div>
 

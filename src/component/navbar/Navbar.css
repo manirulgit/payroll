@@ -1,12 +1,20 @@
 .menubar{
     width: 100%;
-    background-color: aliceblue;
+    background-color: rgb(0, 213, 255);
     border-radius: 2px;
     border-color: green;
     margin-left: 3px;
+    height: 100%;
 }
 .menutext{
-    color: blue;
+   
     text-decoration: none;
     margin-left: 2px;
+    font-size: 15px;
 }
+a {
+    text-decoration: none !important;
+  }
+  .iconstyle{
+    font-size: 20px;
+  }
