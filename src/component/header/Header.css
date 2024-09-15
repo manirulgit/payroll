@@ -2,75 +2,50 @@ body {
     font-size: 12px;
 }
 
-.app-menu .btn-group-panel {
-    display: inline-block;
-    border-right: 1px solid #ccc;
-    padding-right: 5px;
-}
-
-#app-menu .btn-group {
-    padding: 10px
-}
-
-#app-menu .btn-group-footer {
-    text-align: center;
-    font-weight: bold;
-    padding-bottom: 5px;
-}
-
-.fa-1_6x {
-    font-size: 1.6em;
-}
-
-#app-menu .btn-label {
-    display: block;
-    font-size: 12px;
-}
-
-.nav-tabs {
-    border-bottom: 2px solid #DDD;
-}
-
-.nav-tabs>li.active>a,
-.nav-tabs>li.active>a:focus,
-.nav-tabs>li.active>a:hover {
-    border-width: 0;
-}
-
-.nav-tabs>li>a {
-    border: none;
-    color: #666;
-}
-
-.nav-tabs>li.active>a,
-.nav-tabs>li>a:hover {
-    border: none;
-    color: #4285F4 !important;
-    background: transparent;
-}
-
-.nav-tabs>li>a::after {
-    content: "";
-    background: #4285F4;
-    height: 2px;
-    position: absolute;
-    width: 100%;
-    left: 0px;
-    bottom: -1px;
-    transition: all 250ms ease 0s;
-    transform: scale(0);
-}
-
-.nav-tabs>li.active>a::after,
-.nav-tabs>li:hover>a::after {
-    transform: scale(1);
-}
-
-.tab-nav>li>a::after {
-    background: #21527d none repeat scroll 0% 0%;
-    color: #fff;
-}
 
 .card {
     border: 1px solid #ccc;
+}
+
+header .logo {
+    height: 70px;
+    width: 200px;
+    margin-top: -19px;
+    margin-left: -50px;
+    background-color: #00ffa23b;
+    border-radius: 2px;
+    border-color: red;
+}
+
+.menubox {
+    margin-top: -20px;
+    display: block;
+    width: 100%;
+    height: 10%;
+    padding: 6px 16px;
+    font-size: 12px;
+    line-height: 1.42857143;
+    color: blue;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    border-color: green;
+
+}
+
+.imgclass {
+    height: 25px;
+    width: 25px;
+}
+
+.menu-text {
+    text-align: center;
+    display: inline;
+}
+
+header {
+    width: 100%;
+    height: 80px;
+    background-color: #ccc;
 }

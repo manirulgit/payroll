@@ -7,11 +7,11 @@ function Header() {
     return (
         <header>
             <div className='container-fluid w-100 h-100'>
-                <div className='row d-flex align-items-center'>
+                <div className='row'>
                     <Navbar expand="lg">
                         <Container>
-                            <div class='row topmanubar'>
-                                <div className='col-md-2 align-items-center'>
+                            <div class='row'>
+                                <div className='col-md-2'>
                                     <img src={logo} className='logo'></img>
                                 </div>
                                 <div className='col-md-8 lign-items-center'>
@@ -67,7 +67,7 @@ function Header() {
                                                 <Nav.Link href='dashboard'><img src={homeIcon} className='imgclass'></img><div className='menu-text'>Home</div>
                                                 </Nav.Link>
                                             </div>
-                                            
+
                                         </Nav>
                                     </Navbar.Collapse>
                                 </div>
