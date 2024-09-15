@@ -3,8 +3,10 @@
     background-color: aliceblue;
     border-radius: 2px;
     border-color: green;
+    margin-left: 3px;
 }
 .menutext{
     color: blue;
     text-decoration: none;
+    margin-left: 2px;
 }

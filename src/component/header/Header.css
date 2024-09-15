@@ -1,12 +1,9 @@
 body {
     font-size: 12px;
 }
-
-
 .card {
     border: 1px solid #ccc;
 }
-
 header .logo {
     height: 70px;
     width: 200px;
