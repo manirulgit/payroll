@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Employee from './component/Employee';
 import Login from './component/login';
 import Ticket from './component/Ticket';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (

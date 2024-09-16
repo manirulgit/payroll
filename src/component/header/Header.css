@@ -17,7 +17,7 @@ header .logo {
 .menubox {
     margin-top: -20px;
     display: block;
-    width: 100%;
+    width: 90%;
     height: 10%;
     padding: 6px 16px;
     font-size: 12px;
@@ -33,7 +33,7 @@ header .logo {
 
 .imgclass {
     height: 25px;
-    width: 25px;
+    width: 20px;
 }
 
 .menu-text {
