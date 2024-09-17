@@ -10,10 +10,7 @@ import locationIcon from '../../assets/location-icon.png';
 import videoIcon from '../../assets/video-icon.png';
 import payrollIcon from '../../assets/payroll-icon.png';
 import expenseIcon from '../../assets/expense-icon.png';
-
-
-
-
+import logoutIcon from '../../assets/logout.png';
 
 
 import logo from '../../assets/logo.png';
@@ -35,7 +32,7 @@ function Header() {
                                     <Navbar.Collapse id="basic-navbar-nav">
                                         <Nav className='me-auto'>
                                             <div className='menubox'>
-                                                <Nav.Link href='home'><img src={homeIcon} className='imgclass'></img><div className='menu-text'>Home</div>
+                                                <Nav.Link href='dashboard'><img src={homeIcon} className='imgclass'></img><div className='menu-text'>Home</div>
                                                 </Nav.Link>
                                             </div>
                                             <div className='menubox'>
@@ -79,6 +76,16 @@ function Header() {
                                                 <Nav.Link href='dashboard'><img src={seetingIcon} className='imgclass'></img><div className='menu-text'>Seeting</div>
                                                 </Nav.Link>
                                             </div>
+                                            <div className='menubox'>
+                                                <Nav.Link href='dashboard'><img src={seetingIcon} className='imgclass'></img><div className='menu-text'>Seeting</div>
+                                                </Nav.Link>
+                                            </div>
+
+                                            <div className='menubox'>
+                                                <Nav.Link href='logout'><img src={logoutIcon} className='imgclass'></img><div className='menu-text'>Logout</div>
+                                                </Nav.Link>
+                                            </div>
+
 
                                         </Nav>
                                     </Navbar.Collapse>
