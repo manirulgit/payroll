@@ -9,8 +9,8 @@ import LiveStatus from './component/jadmin/LiveStatus';
 import Dashboard from './component/jadmin//dashboard';
 import Home from './component/Home';
 import Contact from './component/Contact';
-
-function App() {
+import  Payroll from './component/jadmin/payroll';
+function App() {  
   return (
     <BrowserRouter>
       <Routes>
@@ -22,7 +22,7 @@ function App() {
         <Route path="/liveStatus" exact={true} element={<LiveStatus />}></Route>
         <Route path="/logout" element={<Login />}></Route>
         <Route path="/jadmin" element={<Login />}></Route>
-        
+        <Route path="/payroll" element={<Payroll />}></Route>
       </Routes>
     </BrowserRouter>
   );

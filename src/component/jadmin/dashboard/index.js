@@ -5,19 +5,20 @@ import './Dashboard.css';
 function Dashboard() {
     return (
         <div>
-            <Header />
+            <Header />  
 
             <section style={{ margin: '2rem 0', padding: '1.5rem', background: '#e3f2fd', borderRadius: '8px', boxShadow: '0 2px 8px rgba(25, 118, 210, 0.08)' }}>
-
                 <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
                     <div style={{ flex: '1 1 180px', background: '#fff', borderRadius: '6px', boxShadow: '0 1px 4px rgba(25,118,210,0.07)', padding: '1rem', minWidth: '180px', textAlign: 'center', transition: 'box-shadow 0.2s', cursor: 'pointer' }}>
                         <span style={{ fontSize: '2rem', color: '#1976d2', display: 'block', marginBottom: '0.5rem' }}>💼</span>
                         <strong style={{ color: '#333' }}>HR</strong>
                     </div>
-                    <div style={{ flex: '1 1 180px', background: '#fff', borderRadius: '6px', boxShadow: '0 1px 4px rgba(25,118,210,0.07)', padding: '1rem', minWidth: '180px', textAlign: 'center', transition: 'box-shadow 0.2s', cursor: 'pointer' }}>
-                        <span style={{ fontSize: '2rem', color: '#1976d2', display: 'block', marginBottom: '0.5rem' }}>🧾</span>
-                        <strong style={{ color: '#333' }}>Payroll</strong>
-                    </div>
+                    <a href="/payroll" style={{ textDecoration: 'none' }}>
+                        <div style={{ flex: '1 1 180px', background: '#fff', borderRadius: '6px', boxShadow: '0 1px 4px rgba(25,118,210,0.07)', padding: '1rem', minWidth: '180px', textAlign: 'center', transition: 'box-shadow 0.2s', cursor: 'pointer' }}>
+                            <span style={{ fontSize: '2rem', color: '#1976d2', display: 'block', marginBottom: '0.5rem' }}>🧾</span>
+                            <strong style={{ color: '#333' }}>Payroll</strong>
+                        </div>
+                    </a>
                     <div style={{ flex: '1 1 180px', background: '#fff', borderRadius: '6px', boxShadow: '0 1px 4px rgba(25,118,210,0.07)', padding: '1rem', minWidth: '180px', textAlign: 'center', transition: 'box-shadow 0.2s', cursor: 'pointer' }}>
                         <span style={{ fontSize: '2rem', color: '#1976d2', display: 'block', marginBottom: '0.5rem' }}>📊</span>
                         <strong style={{ color: '#333' }}>Analytics</strong>
@@ -29,16 +30,17 @@ function Dashboard() {
                 </div>
             </section>
             <section style={{ margin: '2rem 0', padding: '1.5rem', background: '#e3f2fd', borderRadius: '8px', boxShadow: '0 2px 8px rgba(25, 118, 210, 0.08)' }}>
-
                 <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
                     <div style={{ flex: '1 1 180px', background: '#fff', borderRadius: '6px', boxShadow: '0 1px 4px rgba(25,118,210,0.07)', padding: '1rem', minWidth: '180px', textAlign: 'center', transition: 'box-shadow 0.2s', cursor: 'pointer' }}>
                         <span style={{ fontSize: '2rem', color: '#1976d2', display: 'block', marginBottom: '0.5rem' }}>💼</span>
                         <strong style={{ color: '#333' }}>HR</strong>
                     </div>
-                    <div style={{ flex: '1 1 180px', background: '#fff', borderRadius: '6px', boxShadow: '0 1px 4px rgba(25,118,210,0.07)', padding: '1rem', minWidth: '180px', textAlign: 'center', transition: 'box-shadow 0.2s', cursor: 'pointer' }}>
-                        <span style={{ fontSize: '2rem', color: '#1976d2', display: 'block', marginBottom: '0.5rem' }}>🧾</span>
-                        <strong style={{ color: '#333' }}>Payroll</strong>
-                    </div>
+                    <a href="/payroll" style={{ textDecoration: 'none' }}>
+                        <div style={{ flex: '1 1 180px', background: '#fff', borderRadius: '6px', boxShadow: '0 1px 4px rgba(25,118,210,0.07)', padding: '1rem', minWidth: '180px', textAlign: 'center', transition: 'box-shadow 0.2s', cursor: 'pointer' }}>
+                            <span style={{ fontSize: '2rem', color: '#1976d2', display: 'block', marginBottom: '0.5rem' }}>🧾</span>
+                            <strong style={{ color: '#333' }}>Payroll</strong>
+                        </div>
+                    </a>
                     <div style={{ flex: '1 1 180px', background: '#fff', borderRadius: '6px', boxShadow: '0 1px 4px rgba(25,118,210,0.07)', padding: '1rem', minWidth: '180px', textAlign: 'center', transition: 'box-shadow 0.2s', cursor: 'pointer' }}>
                         <span style={{ fontSize: '2rem', color: '#1976d2', display: 'block', marginBottom: '0.5rem' }}>📊</span>
                         <strong style={{ color: '#333' }}>Analytics</strong>

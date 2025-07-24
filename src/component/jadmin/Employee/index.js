@@ -4,7 +4,7 @@ import './Employee.css';
 
 function Employee() {
     return (
-        <div>
+        <div>  
             <Header />
            <section
                 style={{ margin: '1rem 0', padding: '1.5rem', background: '#e3f2fd', borderRadius: '1px', boxShadow: '0 2px 8px rgba(25, 118, 210, 0.08)' }}>
