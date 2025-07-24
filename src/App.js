@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import LiveStatus from './component/LiveStatus';
 import Dashboard from './component/dashboard';
 import Home from './component/Home';
+import Contact from './component/contactus';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/liveStatus" exact={true} element={<LiveStatus />}></Route>
         <Route path="/logout" element={<Login />}></Route>
         <Route path="/jadmin" element={<Login />}></Route>
+        <Route path="/contact" element={<Contact />}></Route>
       </Routes>
     </BrowserRouter>
   );
