@@ -1,19 +1,19 @@
 import { Container, Nav, Navbar } from 'react-bootstrap';
-import homeIcon from '../../assets/home-icon.png';
-import employeeIcon from '../../assets/employee-icon.png';
-import ticketIcon from '../../assets/ticket-icon.png';
-import seetingIcon from '../../assets/seeting-icon.png';
-import customerIcon from '../../assets/customer-icon.png';
-import productIcon from '../../assets/product-icon.png';
-import attandanceIcon from '../../assets/attandence-icon.png';
-import locationIcon from '../../assets/location-icon.png';
-import videoIcon from '../../assets/video-icon.png';
-import payrollIcon from '../../assets/payroll-icon.png';
-import expenseIcon from '../../assets/expense-icon.png';
-import logoutIcon from '../../assets/logout.png';
+import homeIcon from '../../../assets/home-icon.png';
+import employeeIcon from '../../../assets/employee-icon.png';
+import ticketIcon from '../../../assets/ticket-icon.png';
+import seetingIcon from '../../../assets/seeting-icon.png';
+import customerIcon from '../../../assets/customer-icon.png';
+import productIcon from '../../../assets/product-icon.png';
+import attandanceIcon from '../../../assets/attandence-icon.png';
+import locationIcon from '../../../assets/location-icon.png';
+import videoIcon from '../../../assets/video-icon.png';
+import payrollIcon from '../../../assets/payroll-icon.png';
+import expenseIcon from '../../../assets/expense-icon.png';
+import logoutIcon from '../../../assets/logout.png';
 
 
-import logo from '../../assets/logo.png';
+import logo from '../../../assets/logo.png';
 import './Header.css';
 
 function Header() {

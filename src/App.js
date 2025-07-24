@@ -1,12 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Employee from './component/Employee';
-import Login from './component/login';
-import Ticket from './component/Ticket';
+import Employee from './component/jadmin/Employee';
+import Login from './component/jadmin/login';
+import Ticket from './component/jadmin/Ticket';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import LiveStatus from './component/LiveStatus';
-import Dashboard from './component/dashboard';
+import LiveStatus from './component/jadmin/LiveStatus';
+import Dashboard from './component/jadmin//dashboard';
 import Home from './component/Home';
 import Contact from './component/Contact';
 

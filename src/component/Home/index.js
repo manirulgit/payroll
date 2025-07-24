@@ -39,7 +39,7 @@ function Home() {
                     </li>
                     <li>
                         <a 
-                            href="/jadmin" 
+                            href="/" 
                             style={{ 
                                 textDecoration: 'none', 
                                 color: '#1976d2', 
@@ -73,7 +73,7 @@ function Home() {
                     </li>
                     <li>
                         <a 
-                            href="/dashboard" 
+                            href="/contact" 
                             style={{ 
                                 textDecoration: 'none', 
                                 color: '#1976d2', 
@@ -88,13 +88,30 @@ function Home() {
                             Contact
                         </a>
                     </li>
+                     <li>
+                        <a 
+                            href="/jadmin" 
+                            style={{ 
+                                textDecoration: 'none', 
+                                color: '#1976d2', 
+                                fontWeight: 'bold', 
+                                padding: '0.5rem 1rem', 
+                                borderRadius: '4px', 
+                                transition: 'background 0.2s, color 0.2s' 
+                            }}
+                            onMouseOver={e => { e.target.style.background = '#e3f2fd'; e.target.style.color = '#0d47a1'; }}
+                            onMouseOut={e => { e.target.style.background = 'none'; e.target.style.color = '#1976d2'; }}
+                        >
+                            Admin
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <section style={{ margin: '2rem 0', padding: '1.5rem', background: '#e3f2fd', borderRadius: '8px', boxShadow: '0 2px 8px rgba(25, 118, 210, 0.08)' }}>
                 <h2 style={{ marginBottom: '1rem', color: '#1976d2' }}>Categories</h2>
                 <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
                     <div style={{ flex: '1 1 180px', background: '#fff', borderRadius: '6px', boxShadow: '0 1px 4px rgba(25,118,210,0.07)', padding: '1rem', minWidth: '180px', textAlign: 'center', transition: 'box-shadow 0.2s', cursor: 'pointer' }}>
-                        <span style={{ fontSize: '2rem', color: '#1976d2', display: 'block', marginBottom: '0.5rem' }}>💼</span>
+                         <span style={{ fontSize: '2rem', color: '#1976d2', display: 'block', marginBottom: '0.5rem' }}>💼</span>
                         <strong style={{ color: '#333' }}>HR</strong>
                     </div>
                     <div style={{ flex: '1 1 180px', background: '#fff', borderRadius: '6px', boxShadow: '0 1px 4px rgba(25,118,210,0.07)', padding: '1rem', minWidth: '180px', textAlign: 'center', transition: 'box-shadow 0.2s', cursor: 'pointer' }}>

@@ -9,10 +9,12 @@ function handleSubmit(event) {
 }
 
 function Login() {
+    const navigateToDashboard = () => {
+        window.location.href = "/dashboard";
+    };
+
     return (
         <div>
-            <Header />
-            <Nabvar />
             <section
                 className="content"
                 style={{
@@ -27,13 +29,13 @@ function Login() {
                 <div className="row" style={{ width: "100%" }}>
                     <div className="login-box" style={{ width: "100%" }}>
                         <div className="login-box-body">
-                            <form onSubmit={handleSubmit}>
+                            <form>
                                 <div className="form-group has-feedback">
-                                    <input name="myInput" className="form-control" placeholder='Enter name' />
+                                    <input name="myInput" className="form-control" placeholder='Enter User Id' />
                                     <span className="glyphicon glyphicon-user form-control-feedback"></span>
                                 </div>
                                 <div className="form-group has-feedback">
-                                    <input name="myInput" className="form-control" placeholder='Enter name' />
+                                    <input name="myInput" className="form-control" placeholder='Enter Password' />
                                     <span className="glyphicon glyphicon-log-in form-control-feedback"></span>
                                 </div>
                                 <div className="form-group has-feedback" style={{ display: "flex", justifyContent: "center" }}>
@@ -43,6 +45,7 @@ function Login() {
                                         id="goButton"
                                         className="btn btn-primary btn-block btn-flat"
                                         style={{ maxWidth: "150px" }}
+                                        onClick={navigateToDashboard}
                                     />
                                 </div>
                             </form>
