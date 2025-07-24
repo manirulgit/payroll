@@ -3,44 +3,55 @@ import Nabvar from '../navbar';
 import './Login.css';
 
 function handleSubmit(event) {
-   console.log("Login btn click");
-   alert("ccc");
-    
-  }
+    console.log("Login btn click");
+    alert("ccc");
+
+}
 
 function Login() {
     return (
         <div>
             <Header />
             <Nabvar />
-            <section class="content">
-                <div class="row">
-                    <div class="login-box">
-                        <div class="login-box-body">
-                            <form onSubmit={handleSubmit} >
-                                <div class="form-group has-feedback">
-                                    <input name="myInput" class="form-control" placeholder='Enter name' />
-                                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            <section
+                className="content"
+                style={{
+                    maxWidth: "400px",
+                    margin: "0 auto",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minHeight: "80vh"
+                }}
+            >
+                <div className="row" style={{ width: "100%" }}>
+                    <div className="login-box" style={{ width: "100%" }}>
+                        <div className="login-box-body">
+                            <form onSubmit={handleSubmit}>
+                                <div className="form-group has-feedback">
+                                    <input name="myInput" className="form-control" placeholder='Enter name' />
+                                    <span className="glyphicon glyphicon-user form-control-feedback"></span>
                                 </div>
-                                <div class="form-group has-feedback">
-                                    <input name="myInput" class="form-control" placeholder='Enter name' />
-                                    <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+                                <div className="form-group has-feedback">
+                                    <input name="myInput" className="form-control" placeholder='Enter name' />
+                                    <span className="glyphicon glyphicon-log-in form-control-feedback"></span>
                                 </div>
-
-                                <div class="form-group has-feedback">
-                                    <input type="button" value="Log In" id="goButton" class="btn btn-primary btn-block btn-flat" />
+                                <div className="form-group has-feedback" style={{ display: "flex", justifyContent: "center" }}>
+                                    <input
+                                        type="button"
+                                        value="Log In"
+                                        id="goButton"
+                                        className="btn btn-primary btn-block btn-flat"
+                                        style={{ maxWidth: "150px" }}
+                                    />
                                 </div>
                             </form>
-
-                            <div class="clearfix"></div>
+                            <div className="clearfix"></div>
                         </div>
-
                     </div>
                 </div>
             </section>
-
         </div>
-
     );
 }
 
