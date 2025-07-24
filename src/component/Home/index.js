@@ -56,7 +56,7 @@ function Home() {
                     </li>
                     <li>
                         <a 
-                            href="/payroll" 
+                            href="/contact" 
                             style={{ 
                                 textDecoration: 'none', 
                                 color: '#1976d2', 
@@ -73,7 +73,7 @@ function Home() {
                     </li>
                     <li>
                         <a 
-                            href="/contact" 
+                            href="/dashboard" 
                             style={{ 
                                 textDecoration: 'none', 
                                 color: '#1976d2', 
