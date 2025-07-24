@@ -67,7 +67,9 @@ function Payroll()  {
                                 <td>{row.salary}</td>
                                 <td>{row.bonus}</td>
                                 <td>{row.total}</td>
-                                <td>
+                                <td style={{ textAlign: 'center', cursor: 'pointer' }}>
+                                    <button className="payroll-btn" onClick={() => handlePreview(row)}>
+                                        </button>
                                     
                                         
                                         {/* Success Icon SVG */}
