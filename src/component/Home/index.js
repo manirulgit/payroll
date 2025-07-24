@@ -105,7 +105,7 @@ function Home() {
                             Admin
                         </a>
                     </li>
-                </ul>
+                </ul>   
             </nav>
             <section style={{ margin: '2rem 0', padding: '1.5rem', background: '#e3f2fd', borderRadius: '8px', boxShadow: '0 2px 8px rgba(25, 118, 210, 0.08)' }}>
                 <h2 style={{ marginBottom: '1rem', color: '#1976d2' }}>Categories</h2>

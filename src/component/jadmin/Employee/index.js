@@ -6,7 +6,14 @@ function Employee() {
     return (
         <div>
             <Header />
-            <Nabvar />
+           <section
+                style={{ margin: '1rem 0', padding: '1.5rem', background: '#e3f2fd', borderRadius: '1px', boxShadow: '0 2px 8px rgba(25, 118, 210, 0.08)' }}>
+                <div style={{ display: 'flex', gap: '1.5rem', flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <h2 style={{ margin: 0 }}>Employee List</h2>
+                    </div>
+                </div>
+            </section>
             <div class="table-responsive">
                 <table id="example2" class="table table-striped table-bordered table-hover">
                     <thead>
