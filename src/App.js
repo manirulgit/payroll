@@ -7,19 +7,20 @@ import Ticket from './component/Ticket';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LiveStatus from './component/LiveStatus';
 import Dashboard from './component/dashboard';
+import Home from './component/Home';
 
 function App() {
   return (
     <BrowserRouter>
-    <Routes>
-        <Route path="/" element={<Login />}></Route>
+      <Routes>
+        <Route path="/" element={<Home />}></Route>
         <Route path="/dashboard" exact={true} element={<Dashboard />}></Route>
         <Route path="/employee" exact={true} element={<Employee />}></Route>
         <Route path="/addTicket" exact={true} element={<Ticket />}></Route>
         <Route path="/liveStatus" exact={true} element={<LiveStatus />}></Route>
         <Route path="/logout" element={<Login />}></Route>
+        <Route path="/jadmin" element={<Login />}></Route>
       </Routes>
-    
     </BrowserRouter>
   );
 }
