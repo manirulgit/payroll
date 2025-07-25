@@ -1,21 +1,21 @@
+import Footer from '../Footer';
 import Header from '../header';
 import Nabvar from '../navbar';
 import './Employee.css';
 
 function Employee() {
     return (
-        <div>  
+        <div>
             <Header />
-           <section
-                style={{ margin: '1rem 0', padding: '1.5rem', background: '#e3f2fd', borderRadius: '1px', boxShadow: '0 2px 8px rgba(25, 118, 210, 0.08)' }}>
-                <div style={{ display: 'flex', gap: '1.5rem', flexDirection: 'column' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <h2 style={{ margin: 0 }}>Employee List</h2>
+            <section className="payroll-section">
+                <div className='payroll-header'>
+                    <div className='payroll-title'>
+                        <p className='title'>Employee</p>
                     </div>
                 </div>
             </section>
             <div class="table-responsive">
-                <table id="example2" class="table table-striped table-bordered table-hover">
+                <table id="example2" class="table table-striped table-bordered table-hover" style={{ fontSize: '13px' }}>
                     <thead>
                         <tr>
                             <th>Select</th>
@@ -151,8 +151,10 @@ function Employee() {
                 </table>
             </div>
             <div class="pagination pull-right"> <a href="#">&laquo;</a> <a href="#" class="active">1</a> <a href="#">2</a> <a href="#">3</a> <a href="#">4</a> <a href="#">5</a> <a href="#">6</a> <a href="#">&raquo;</a> </div>
+            <Footer />
+
         </div>
-        
+
 
     );
 }

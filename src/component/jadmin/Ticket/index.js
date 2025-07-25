@@ -12,7 +12,7 @@ function Ticket() {
                     <div className="box-header with-border">
                         <h3 className="box-title">Add Ticket</h3>
                     </div>
-                    <form style={{ padding: '20px', background: '#f9f9f9', borderRadius: '8px' }}>
+                    <form style={{ padding: '20px', background: '#f9f9f9', borderRadius: '8px', fontSize: '13px' }}>
                         <div className="box-body">
                             <div className="row">
                                 <div className="col-sm-4">
