@@ -50,7 +50,7 @@ function Header() {
                                                 </Nav.Link>
                                             </div>
                                             <div className='menubox'>
-                                                <Nav.Link href='dashboard'>
+                                                <Nav.Link href='customer'>
                                                     <img src={customerIcon} className='imgclass' alt="Customer" />
                                                     <div className='menu-text'>Customer</div>
                                                 </Nav.Link>
@@ -62,15 +62,21 @@ function Header() {
                                                 </Nav.Link>
                                             </div>
                                             <div className='menubox'>
-                                                <Nav.Link href='dashboard'>
+                                                <Nav.Link href='attendance'>
                                                     <img src={attandanceIcon} className='imgclass' alt="Attendance" />
                                                     <div className='menu-text'>Attendance</div>
                                                 </Nav.Link>
                                             </div>
                                             <div className='menubox'>
-                                                <Nav.Link href='dashboard'>
+                                                <Nav.Link href='location'>
                                                     <img src={locationIcon} className='imgclass' alt="Location" />
                                                     <div className='menu-text'>Location</div>
+                                                </Nav.Link>
+                                            </div>
+                                            <div className='menubox'>
+                                                <Nav.Link href='payroll'>
+                                                    <img src={payrollIcon} className='imgclass' alt="Payroll" />
+                                                    <div className='menu-text'>Payroll</div>
                                                 </Nav.Link>
                                             </div>
                                             <div className='menubox'>

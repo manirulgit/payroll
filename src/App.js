@@ -10,6 +10,9 @@ import Dashboard from './component/jadmin//dashboard';
 import Home from './component/Home';
 import Contact from './component/Contact';
 import  Payroll from './component/jadmin/payroll';
+import  Attendance from './component/jadmin/Attendance';
+import Location from './component/jadmin/Location';
+import Customer from './component/jadmin/Customer';
 function App() {  
   return (
     <BrowserRouter>
@@ -23,6 +26,10 @@ function App() {
         <Route path="/logout" element={<Login />}></Route>
         <Route path="/jadmin" element={<Login />}></Route>
         <Route path="/payroll" element={<Payroll />}></Route>
+        <Route path="/attendance" element={<Attendance />}></Route>
+        <Route path="/location" element={<Location />}></Route>
+        <Route path="/customer" element={<Customer />}></Route>
+        {/* Add more routes as needed */}
       </Routes>
     </BrowserRouter>
   );
