@@ -44,7 +44,7 @@ function Header() {
                                                 </Nav.Link>
                                             </div>
                                             <div className='menubox'>
-                                                <Nav.Link href='addTicket'>
+                                                <Nav.Link href='ListTicket'>
                                                     <img src={ticketIcon} className='imgclass' alt="Ticket" />
                                                     <div className='menu-text'>Ticket</div>
                                                 </Nav.Link>
@@ -56,7 +56,7 @@ function Header() {
                                                 </Nav.Link>
                                             </div>
                                             <div className='menubox'>
-                                                <Nav.Link href='products'>
+                                                <Nav.Link href='listProduct'>
                                                     <img src={productIcon} className='imgclass' alt="Product" />
                                                     <div className='menu-text'>Products</div>
                                                 </Nav.Link>
@@ -86,7 +86,7 @@ function Header() {
                                                 </Nav.Link>
                                             </div>
                                             <div className='menubox'>
-                                                <Nav.Link href='dashboard'>
+                                                <Nav.Link href='expenseList'>
                                                     <img src={expenseIcon} className='imgclass' alt="Expense" />
                                                     <div className='menu-text'>Expense</div>
                                                 </Nav.Link>

@@ -14,6 +14,10 @@ import  Attendance from './component/jadmin/Attendance';
 import Location from './component/jadmin/Location';
 import Customer from './component/jadmin/Customer';
 import Products from './component/Products';
+import ListTicket from './component/jadmin/ListTicket';
+import ListProduct from './component/jadmin/ListProduct';
+import ExpenseList from './component/jadmin/ExpenceList';
+
 function App() {  
   return (
     <BrowserRouter>
@@ -22,7 +26,7 @@ function App() {
         <Route path="/contact" element={<Contact />}></Route>
         <Route path="/dashboard" exact={true} element={<Dashboard />}></Route>
         <Route path="/employee" exact={true} element={<Employee />}></Route>
-        <Route path="/addTicket" exact={true} element={<Ticket />}></Route>
+        <Route path="/ListTicket" exact={true} element={<ListTicket />}></Route>
         <Route path="/liveStatus" exact={true} element={<LiveStatus />}></Route>
         <Route path="/logout" element={<Login />}></Route>
         <Route path="/jadmin" element={<Login />}></Route>
@@ -31,6 +35,8 @@ function App() {
         <Route path="/location" element={<Location />}></Route>
         <Route path="/customer" element={<Customer />}></Route>
         <Route path="/" element={<Products />}></Route>
+        <Route path="/listProduct" element={<ListProduct />}></Route>
+        <Route path="/expenseList" element={<ExpenseList />}></Route>
         {/* Add more routes as needed */}
       </Routes>
     </BrowserRouter>
