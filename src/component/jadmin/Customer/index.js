@@ -394,7 +394,7 @@ function Customer() {
                     />
                   </th>
                   <th scope="col" className="sortable" onClick={() => handleSort('customerCode')}>
-                    Customer Code
+                    Cust Code
                     {sorting.sortBy === 'customerCode' && (
                       <i className={`fas fa-sort-${sorting.sortOrder === 'asc' ? 'up' : 'down'} ms-1`}></i>
                     )}
@@ -436,7 +436,7 @@ function Customer() {
                     )}
                   </th>
                   <th scope="col" className="sortable" onClick={() => handleSort('totalSpent')}>
-                    Total Spent
+                     Spent
                     {sorting.sortBy === 'totalSpent' && (
                       <i className={`fas fa-sort-${sorting.sortOrder === 'asc' ? 'up' : 'down'} ms-1`}></i>
                     )}

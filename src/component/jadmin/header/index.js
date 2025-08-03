@@ -56,9 +56,9 @@ function Header() {
                                                 </Nav.Link>
                                             </div>
                                             <div className='menubox'>
-                                                <Nav.Link href='dashboard'>
+                                                <Nav.Link href='products'>
                                                     <img src={productIcon} className='imgclass' alt="Product" />
-                                                    <div className='menu-text'>Product</div>
+                                                    <div className='menu-text'>Products</div>
                                                 </Nav.Link>
                                             </div>
                                             <div className='menubox'>

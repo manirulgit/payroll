@@ -13,11 +13,12 @@ import  Payroll from './component/jadmin/payroll';
 import  Attendance from './component/jadmin/Attendance';
 import Location from './component/jadmin/Location';
 import Customer from './component/jadmin/Customer';
+import Products from './component/Products';
 function App() {  
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />}></Route>
+        <Route path="/" element={<Products />}></Route>
         <Route path="/contact" element={<Contact />}></Route>
         <Route path="/dashboard" exact={true} element={<Dashboard />}></Route>
         <Route path="/employee" exact={true} element={<Employee />}></Route>
@@ -29,6 +30,7 @@ function App() {
         <Route path="/attendance" element={<Attendance />}></Route>
         <Route path="/location" element={<Location />}></Route>
         <Route path="/customer" element={<Customer />}></Route>
+        <Route path="/" element={<Products />}></Route>
         {/* Add more routes as needed */}
       </Routes>
     </BrowserRouter>

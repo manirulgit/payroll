@@ -1,4 +1,7 @@
-function contact() {
+import Footer from "../Footer";
+import Header from "../Header";
+
+function Contact() {
     // const handleSubmit = (e) => {
     //     e.preventDefault();
     //     const form = e.target;
@@ -26,6 +29,8 @@ function contact() {
     // };
 
     return (
+        <div>
+            <Header />
         <div style={{ padding: '20px', textAlign: 'center' }}>
             <h1>Contact Us</h1>
             <p>If you have any questions, feel free to reach out!</p>
@@ -42,6 +47,8 @@ function contact() {
                 <button type="submit" style={{ padding: '10px 20px', backgroundColor: '#1976d2', color: '#fff', border: 'none', borderRadius: '4px' }}>Send</button>
             </form>
         </div>
+        <Footer />
+        </div>
     );
 }
-export default contact;
+export default Contact;

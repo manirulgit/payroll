@@ -114,7 +114,12 @@ function Home() {
                          <span style={{ fontSize: '2rem', color: '#1976d2', display: 'block', marginBottom: '0.5rem' }}>💼</span>
                         <strong style={{ color: '#333' }}>HR</strong>
                     </div>
-                    <div style={{ flex: '1 1 180px', background: '#fff', borderRadius: '6px', boxShadow: '0 1px 4px rgba(25,118,210,0.07)', padding: '1rem', minWidth: '180px', textAlign: 'center', transition: 'box-shadow 0.2s', cursor: 'pointer' }}>
+                    <div 
+                        style={{ flex: '1 1 180px', background: '#fff', borderRadius: '6px', boxShadow: '0 1px 4px rgba(25,118,210,0.07)', padding: '1rem', minWidth: '180px', textAlign: 'center', transition: 'box-shadow 0.2s', cursor: 'pointer' }}
+                        onClick={() => window.location.href = '/payroll'}
+                        onMouseOver={e => { e.target.style.boxShadow = '0 4px 12px rgba(25,118,210,0.15)'; e.target.style.transform = 'translateY(-2px)'; }}
+                        onMouseOut={e => { e.target.style.boxShadow = '0 1px 4px rgba(25,118,210,0.07)'; e.target.style.transform = 'translateY(0)'; }}
+                    >
                         <span style={{ fontSize: '2rem', color: '#1976d2', display: 'block', marginBottom: '0.5rem' }}>🧾</span>
                         <strong style={{ color: '#333' }}>Payroll</strong>
                     </div>
@@ -129,7 +134,13 @@ function Home() {
                 </div>
             </section>
             <section style={{ margin: '2rem 0', padding: '1.5rem', background: '#f9f9f9', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-                <h2 style={{ marginBottom: '1rem', color: '#333' }}>Product </h2>
+                <h2 style={{ marginBottom: '1rem', color: '#333' }}>
+                    <a href="/products" style={{ textDecoration: 'none', color: '#333', transition: 'color 0.3s' }} 
+                       onMouseOver={e => e.target.style.color = '#1976d2'} 
+                       onMouseOut={e => e.target.style.color = '#333'}>
+                        Products 🛒
+                    </a>
+                </h2>
                 <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
                     <div style={{ flex: '1 1 220px', background: '#fff', borderRadius: '6px', boxShadow: '0 1px 4px rgba(0,0,0,0.07)', padding: '1rem', minWidth: '220px' }}>
                         <h3 style={{ margin: '0 0 0.5rem 0', color: '#1976d2' }}>Payroll Management</h3>
