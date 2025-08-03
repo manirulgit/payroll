@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import './Customer.css';    
+import './Customer.css';
 import Header from '../header';
 
 // Mock server-side data generator
@@ -7,7 +7,7 @@ const generateCustomerData = (total = 250) => {
   const departments = ['Sales', 'Marketing', 'IT', 'HR', 'Finance', 'Operations'];
   const statuses = ['Active', 'Inactive', 'Pending', 'Suspended'];
   const countries = ['USA', 'Canada', 'UK', 'Germany', 'France', 'Australia', 'India', 'Japan'];
-  
+
   const customers = [];
   for (let i = 1; i <= total; i++) {
     customers.push({
@@ -33,13 +33,13 @@ const generateCustomerData = (total = 250) => {
 // Mock server API simulation
 const mockServerAPI = {
   data: generateCustomerData(250),
-  
+
   fetchData: async (page, pageSize, sortBy, sortOrder, search, filters) => {
     // Simulate server delay
     await new Promise(resolve => setTimeout(resolve, 500));
-    
+
     let filteredData = [...mockServerAPI.data];
-    
+
     // Apply search filter
     if (search) {
       const searchLower = search.toLowerCase();
@@ -51,51 +51,51 @@ const mockServerAPI = {
         customer.customerCode.toLowerCase().includes(searchLower)
       );
     }
-    
+
     // Apply status filter
     if (filters.status && filters.status !== 'all') {
       filteredData = filteredData.filter(customer => customer.status === filters.status);
     }
-    
+
     // Apply department filter
     if (filters.department && filters.department !== 'all') {
       filteredData = filteredData.filter(customer => customer.department === filters.department);
     }
-    
+
     // Apply country filter
     if (filters.country && filters.country !== 'all') {
       filteredData = filteredData.filter(customer => customer.country === filters.country);
     }
-    
+
     // Apply sorting
     if (sortBy) {
       filteredData.sort((a, b) => {
         let aVal = a[sortBy];
         let bVal = b[sortBy];
-        
+
         // Handle numeric values
         if (sortBy === 'totalOrders' || sortBy === 'totalSpent') {
           aVal = parseFloat(aVal);
           bVal = parseFloat(bVal);
         }
-        
+
         // Handle date values
         if (sortBy === 'joinDate' || sortBy === 'lastLogin') {
           aVal = new Date(aVal);
           bVal = new Date(bVal);
         }
-        
+
         if (aVal < bVal) return sortOrder === 'asc' ? -1 : 1;
         if (aVal > bVal) return sortOrder === 'asc' ? 1 : -1;
         return 0;
       });
     }
-    
+
     const totalRecords = filteredData.length;
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
     const pageData = filteredData.slice(startIndex, endIndex);
-    
+
     return {
       data: pageData,
       totalRecords,
@@ -139,7 +139,7 @@ function Customer() {
         search,
         filters
       );
-      
+
       setCustomers(result.data);
       setPagination(prev => ({
         ...prev,
@@ -235,37 +235,32 @@ function Customer() {
     const pages = [];
     const maxVisible = 5;
     const { currentPage, totalPages } = pagination;
-    
+
     let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
     let endPage = Math.min(totalPages, startPage + maxVisible - 1);
-    
+
     if (endPage - startPage + 1 < maxVisible) {
       startPage = Math.max(1, endPage - maxVisible + 1);
     }
-    
+
     for (let i = startPage; i <= endPage; i++) {
       pages.push(i);
     }
-    
+
     return pages;
   };
 
   return (
     <div className="customer-container">
       <Header />
-      
+
       <div className="customer-content">
-        <div className="page-header">
-         
-          <p>Manage your customer</p>
-        </div>
-        
         {/* Controls Section */}
         <div className="table-controls">
           <div className="row g-3 align-items-end">
             {/* Search */}
             <div className="col-md-4">
-              <label className="form-label">Search Customers</label>
+
               <input
                 type="text"
                 className="form-control"
@@ -274,10 +269,10 @@ function Customer() {
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </div>
-            
+
             {/* Status Filter */}
             <div className="col-md-2">
-              <label className="form-label">Status</label>
+
               <select
                 className="form-select"
                 value={filters.status}
@@ -290,10 +285,10 @@ function Customer() {
                 <option value="Suspended">Suspended</option>
               </select>
             </div>
-            
+
             {/* Department Filter */}
             <div className="col-md-2">
-              <label className="form-label">Department</label>
+
               <select
                 className="form-select"
                 value={filters.department}
@@ -308,10 +303,10 @@ function Customer() {
                 <option value="Operations">Operations</option>
               </select>
             </div>
-            
+
             {/* Country Filter */}
             <div className="col-md-2">
-              <label className="form-label">Country</label>
+
               <select
                 className="form-select"
                 value={filters.country}
@@ -328,10 +323,10 @@ function Customer() {
                 <option value="Japan">Japan</option>
               </select>
             </div>
-            
+
             {/* Page Size */}
             <div className="col-md-2">
-              <label className="form-label">Show</label>
+
               <select
                 className="form-select"
                 value={pagination.pageSize}
@@ -349,30 +344,8 @@ function Customer() {
 
         {/* Table Section */}
         <div className="table-section">
-          <div className="table-header">
-            <div className="d-flex justify-content-between align-items-center">
-              <div className="table-info">
-                Showing {customers.length > 0 ? ((pagination.currentPage - 1) * pagination.pageSize + 1) : 0} to{' '}
-                {Math.min(pagination.currentPage * pagination.pageSize, pagination.totalRecords)} of{' '}
-                {pagination.totalRecords} entries
-                {selectedCustomers.size > 0 && (
-                  <span className="ms-3 text-primary">
-                    ({selectedCustomers.size} selected)
-                  </span>
-                )}
-              </div>
-              <div className="bulk-actions">
-                {selectedCustomers.size > 0 && (
-                  <div className="btn-group">
-                    <button className="btn btn-sm btn-outline-primary">Export Selected</button>
-                    <button className="btn btn-sm btn-outline-secondary">Bulk Edit</button>
-                    <button className="btn btn-sm btn-outline-danger">Delete Selected</button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
           
+
           <div className="table-wrapper">
             {loading && (
               <div className="loading-overlay">
@@ -381,11 +354,11 @@ function Customer() {
                 </div>
               </div>
             )}
-            
+
             <table className="table table-hover table-bordered">
               <thead className="table-dark">
                 <tr>
-                  <th scope="col" className="text-center" style={{width: '50px'}}>
+                  <th scope="col" className="text-center" style={{ width: '50px' }}>
                     <input
                       type="checkbox"
                       className="form-check-input"
@@ -436,7 +409,7 @@ function Customer() {
                     )}
                   </th>
                   <th scope="col" className="sortable" onClick={() => handleSort('totalSpent')}>
-                     Spent
+                    Spent
                     {sorting.sortBy === 'totalSpent' && (
                       <i className={`fas fa-sort-${sorting.sortOrder === 'asc' ? 'up' : 'down'} ms-1`}></i>
                     )}
@@ -503,7 +476,7 @@ function Customer() {
                 ))}
               </tbody>
             </table>
-            
+
             {customers.length === 0 && !loading && (
               <div className="no-data">
                 <div className="text-center p-5">
@@ -539,7 +512,7 @@ function Customer() {
                     <i className="fas fa-angle-left"></i>
                   </button>
                 </li>
-                
+
                 {getPageNumbers().map(pageNum => (
                   <li key={pageNum} className={`page-item ${pagination.currentPage === pageNum ? 'active' : ''}`}>
                     <button
@@ -550,7 +523,7 @@ function Customer() {
                     </button>
                   </li>
                 ))}
-                
+
                 <li className={`page-item ${pagination.currentPage === pagination.totalPages ? 'disabled' : ''}`}>
                   <button
                     className="page-link"
