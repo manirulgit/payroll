@@ -216,6 +216,301 @@
   box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
+/* Add Employee Button Styling */
+.add-employee-section {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+}
+
+.add-employee-btn {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: white;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  min-width: 120px;
+}
+
+.add-employee-btn:hover {
+  background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(40, 167, 69, 0.4);
+  border-color: #28a745;
+}
+
+.add-employee-btn:focus {
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25), 0 6px 25px rgba(40, 167, 69, 0.4);
+  outline: none;
+}
+
+.add-employee-btn:active {
+  background: linear-gradient(135deg, #1e7e34 0%, #155724 100%);
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
+}
+
+.add-employee-btn i {
+  margin-right: 0.5rem;
+  font-size: 0.85rem;
+}
+
+/* Add Employee Modal Styling */
+.modal {
+  z-index: 1050;
+}
+
+.modal-dialog {
+  max-width: 90% !important;
+  width: 1200px !important;
+  margin: 20px auto;
+}
+
+.modal-content {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  min-height: 600px;
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  border-bottom: none;
+  padding: 20px 25px;
+}
+
+.modal-header .modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.modal-header .btn-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: white;
+  opacity: 0.8;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.modal-header .btn-close:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
+}
+
+.modal-body {
+  padding: 30px;
+  background: #fafafa;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.modal-body .section-title {
+  font-weight: 700;
+  color: #495057;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e9ecef;
+  font-size: 1rem;
+}
+
+.modal-body .section-title i {
+  color: #28a745;
+  width: 20px;
+}
+
+.modal-body .form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.modal-body .form-label i {
+  color: #28a745;
+  width: 16px;
+}
+
+.modal-body .form-control,
+.modal-body .form-select {
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.modal-body .form-control:focus,
+.modal-body .form-select:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+  outline: none;
+}
+
+.modal-body .form-control::placeholder {
+  color: #adb5bd;
+  font-style: italic;
+}
+
+.modal-body textarea.form-control {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.modal-footer {
+  background: white;
+  border-top: 1px solid #e9ecef;
+  padding: 20px 25px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal-footer .btn {
+  padding: 10px 20px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-footer .btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.modal-footer .btn-secondary:hover {
+  background: #5a6268;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-footer .btn-success {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+}
+
+.modal-footer .btn-success:hover:not(:disabled) {
+  background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-footer .btn-success:disabled {
+  background: #adb5bd;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Form Row Spacing */
+.modal-body .row {
+  margin: 0 -12px;
+}
+
+.modal-body .row > [class*="col-"] {
+  padding: 0 12px;
+  margin-bottom: 10px;
+}
+
+/* Modal Animation */
+.modal.fade.show {
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive Modal */
+@media (max-width: 1400px) {
+  .modal-dialog {
+    max-width: 95% !important;
+    width: 1000px !important;
+  }
+}
+
+@media (max-width: 1200px) {
+  .modal-dialog {
+    max-width: 98% !important;
+    width: 900px !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .modal-dialog {
+    max-width: 98% !important;
+    width: 100% !important;
+    margin: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal-dialog {
+    margin: 10px;
+    max-width: calc(100% - 20px) !important;
+    width: calc(100% - 20px) !important;
+  }
+  
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 15px;
+  }
+  
+  .modal-body {
+    max-height: 60vh;
+  }
+  
+  .modal-header .modal-title {
+    font-size: 1.1rem;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+  }
+  
+  .modal-footer .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 /* Table Wrapper */
 .table-wrapper {
   position: relative;
@@ -551,11 +846,9 @@
     padding: 0.5rem 0;
   }
   
-
   .table-controls .form-control,
   .table-controls .form-select {
     font-size: 0.75rem;
-   
     min-height: 28px;
   }
   
@@ -569,6 +862,18 @@
     font-size: 0.7rem;
     padding: 0.3rem 0.6rem;
     height: 28px;
+  }
+  
+  .add-employee-btn {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+    height: 28px;
+    min-width: 100px;
+  }
+  
+  .add-employee-btn i {
+    font-size: 0.75rem;
+    margin-right: 0.4rem;
   }
   
   .form-label {
@@ -639,6 +944,22 @@
     font-size: 0.65rem;
     padding: 0.25rem 0.5rem;
     height: 26px;
+  }
+  
+  .add-employee-btn {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.7rem;
+    height: 26px;
+    min-width: 90px;
+  }
+  
+  .add-employee-btn i {
+    font-size: 0.7rem;
+    margin-right: 0.3rem;
+  }
+  
+  .add-employee-section {
+    margin-top: 0.5rem;
   }
   
   .form-label {

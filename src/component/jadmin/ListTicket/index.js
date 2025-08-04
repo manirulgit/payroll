@@ -15,6 +15,19 @@ function ListTicket() {
     const [selectedTickets, setSelectedTickets] = useState([]);
     const [statusFilter, setStatusFilter] = useState('');
     const [priorityFilter, setPriorityFilter] = useState('');
+    const [showNewTicketModal, setShowNewTicketModal] = useState(false);
+    const [newTicketData, setNewTicketData] = useState({
+        title: '',
+        description: '',
+        reporter: '',
+        assignee: '',
+        priority: 'Medium',
+        category: 'Bug',
+        department: 'IT',
+        dueDate: '',
+        tags: '',
+        attachments: ''
+    });
 
     // Mock API function to simulate server-side data fetching
     const fetchTickets = async (page, size, search, sort, direction, statusFilter, priorityFilter) => {
@@ -296,6 +309,81 @@ function ListTicket() {
         };
         return icons[category] || 'fas fa-ticket-alt';
     };
+
+    // New Ticket Modal Functions
+    const handleNewTicketInputChange = (e) => {
+        const { name, value } = e.target;
+        setNewTicketData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSaveNewTicket = () => {
+        // Generate new ticket ID
+        const newTicketId = `TKT-${String(Math.max(...tickets.map(t => parseInt(t.id.split('-')[1]))) + 1).padStart(3, '0')}`;
+        
+        // Create new ticket object
+        const newTicket = {
+            id: newTicketId,
+            ...newTicketData,
+            status: 'Open',
+            createdDate: new Date().toISOString().split('T')[0],
+            createdBy: 'Current User' // In real app, get from auth context
+        };
+
+        // Save to JSON format (in real app, send to API)
+        const ticketJsonData = {
+            timestamp: new Date().toISOString(),
+            action: 'CREATE_TICKET',
+            data: newTicket
+        };
+
+        // Log JSON data (in real app, save to database/API)
+        console.log('New Ticket Data (JSON):', JSON.stringify(ticketJsonData, null, 2));
+        
+        // For demo purposes, save to localStorage
+        const existingTickets = JSON.parse(localStorage.getItem('tickets') || '[]');
+        existingTickets.push(newTicket);
+        localStorage.setItem('tickets', JSON.stringify(existingTickets));
+
+        // Show success message
+        alert(`Ticket ${newTicketId} created successfully!\n\nJSON Data:\n${JSON.stringify(ticketJsonData, null, 2)}`);
+
+        // Reset form and close modal
+        setNewTicketData({
+            title: '',
+            description: '',
+            reporter: '',
+            assignee: '',
+            priority: 'Medium',
+            category: 'Bug',
+            department: 'IT',
+            dueDate: '',
+            tags: '',
+            attachments: ''
+        });
+        setShowNewTicketModal(false);
+
+        // Refresh tickets list
+        fetchTickets(currentPage, pageSize, searchTerm, sortField, sortDirection, statusFilter, priorityFilter);
+    };
+
+    const handleCloseModal = () => {
+        setShowNewTicketModal(false);
+        setNewTicketData({
+            title: '',
+            description: '',
+            reporter: '',
+            assignee: '',
+            priority: 'Medium',
+            category: 'Bug',
+            department: 'IT',
+            dueDate: '',
+            tags: '',
+            attachments: ''
+        });
+    };
   return (
         <div className="ticket-management">
             <Headers />
@@ -357,7 +445,10 @@ function ListTicket() {
                             </select>
                         </div>
                         <div className="col-md-2">
-                            <button className="btn btn-primary w-100">
+                            <button 
+                                className="btn btn-primary w-100"
+                                onClick={() => setShowNewTicketModal(true)}
+                            >
                                 <i className="fas fa-plus me-2"></i>
                                 New Ticket
                             </button>
@@ -602,6 +693,240 @@ function ListTicket() {
                     </div>
                 </div>
             </div>
+
+            {/* New Ticket Modal */}
+            {showNewTicketModal && (
+                <div className="modal fade show" style={{display: 'block', backgroundColor: 'rgba(0,0,0,0.5)'}} tabIndex="-1">
+                    <div className="modal-dialog modal-xl modal-dialog-centered" style={{maxWidth: '90%', width: '1200px'}}>
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                {/* <h5 className="modal-title">
+                                    <i className="fas fa-plus-circle me-2 text-primary"></i>
+                                    Create New Ticket
+                                </h5> */}
+                                <button 
+                                    type="button" 
+                                    className="btn-close" 
+                                    onClick={handleCloseModal}
+                                ></button>
+                            </div>
+                            <div className="modal-body">
+                                <form>
+                                    <div className="row">
+                                        {/* Title */}
+                                        <div className="col-md-12 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-heading me-2"></i>
+                                                Ticket Title *
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                className="form-control" 
+                                                name="title"
+                                                value={newTicketData.title}
+                                                onChange={handleNewTicketInputChange}
+                                                placeholder="Enter ticket title..."
+                                                required
+                                            />
+                                        </div>
+
+                                        {/* Description */}
+                                        <div className="col-md-12 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-align-left me-2"></i>
+                                                Description *
+                                            </label>
+                                            <textarea 
+                                                className="form-control" 
+                                                name="description"
+                                                value={newTicketData.description}
+                                                onChange={handleNewTicketInputChange}
+                                                rows="4"
+                                                placeholder="Describe the issue or request in detail..."
+                                                required
+                                            ></textarea>
+                                        </div>
+
+                                        {/* Reporter and Assignee */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-user me-2"></i>
+                                                Reporter *
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                className="form-control" 
+                                                name="reporter"
+                                                value={newTicketData.reporter}
+                                                onChange={handleNewTicketInputChange}
+                                                placeholder="Reporter name..."
+                                                required
+                                            />
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-user-cog me-2"></i>
+                                                Assignee
+                                            </label>
+                                            <select 
+                                                className="form-select" 
+                                                name="assignee"
+                                                value={newTicketData.assignee}
+                                                onChange={handleNewTicketInputChange}
+                                            >
+                                                <option value="">Select assignee...</option>
+                                                <option value="Sarah Johnson">Sarah Johnson</option>
+                                                <option value="David Wilson">David Wilson</option>
+                                                <option value="Lisa Anderson">Lisa Anderson</option>
+                                                <option value="Christopher White">Christopher White</option>
+                                                <option value="John Smith">John Smith</option>
+                                                <option value="Amanda Thompson">Amanda Thompson</option>
+                                                <option value="Jennifer Garcia">Jennifer Garcia</option>
+                                                <option value="Robert Taylor">Robert Taylor</option>
+                                            </select>
+                                        </div>
+
+                                        {/* Priority and Category */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-exclamation-triangle me-2"></i>
+                                                Priority *
+                                            </label>
+                                            <select 
+                                                className="form-select" 
+                                                name="priority"
+                                                value={newTicketData.priority}
+                                                onChange={handleNewTicketInputChange}
+                                                required
+                                            >
+                                                <option value="Low">Low</option>
+                                                <option value="Medium">Medium</option>
+                                                <option value="High">High</option>
+                                                <option value="Critical">Critical</option>
+                                            </select>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-tags me-2"></i>
+                                                Category *
+                                            </label>
+                                            <select 
+                                                className="form-select" 
+                                                name="category"
+                                                value={newTicketData.category}
+                                                onChange={handleNewTicketInputChange}
+                                                required
+                                            >
+                                                <option value="Bug">Bug</option>
+                                                <option value="Feature Request">Feature Request</option>
+                                                <option value="Infrastructure">Infrastructure</option>
+                                                <option value="Documentation">Documentation</option>
+                                                <option value="Hardware">Hardware</option>
+                                                <option value="Security">Security</option>
+                                                <option value="Training">Training</option>
+                                                <option value="Network">Network</option>
+                                            </select>
+                                        </div>
+
+                                        {/* Department and Due Date */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-building me-2"></i>
+                                                Department *
+                                            </label>
+                                            <select 
+                                                className="form-select" 
+                                                name="department"
+                                                value={newTicketData.department}
+                                                onChange={handleNewTicketInputChange}
+                                                required
+                                            >
+                                                <option value="IT">IT</option>
+                                                <option value="HR">HR</option>
+                                                <option value="Finance">Finance</option>
+                                                <option value="Marketing">Marketing</option>
+                                                <option value="Operations">Operations</option>
+                                                <option value="Sales">Sales</option>
+                                            </select>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-calendar-alt me-2"></i>
+                                                Due Date
+                                            </label>
+                                            <input 
+                                                type="date" 
+                                                className="form-control" 
+                                                name="dueDate"
+                                                value={newTicketData.dueDate}
+                                                onChange={handleNewTicketInputChange}
+                                                min={new Date().toISOString().split('T')[0]}
+                                            />
+                                        </div>
+
+                                        {/* Tags */}
+                                        <div className="col-md-12 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-tag me-2"></i>
+                                                Tags
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                className="form-control" 
+                                                name="tags"
+                                                value={newTicketData.tags}
+                                                onChange={handleNewTicketInputChange}
+                                                placeholder="Enter tags separated by commas (e.g., urgent, login, bug)"
+                                            />
+                                        </div>
+
+                                        {/* Attachments */}
+                                        <div className="col-md-12 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-paperclip me-2"></i>
+                                                Attachments
+                                            </label>
+                                            <input 
+                                                type="file" 
+                                                className="form-control" 
+                                                name="attachments"
+                                                onChange={(e) => {
+                                                    const files = Array.from(e.target.files).map(file => file.name).join(', ');
+                                                    setNewTicketData(prev => ({...prev, attachments: files}));
+                                                }}
+                                                multiple
+                                                accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif"
+                                            />
+                                            <div className="form-text">
+                                                Supported formats: PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, PNG, GIF
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div className="modal-footer">
+                                <button 
+                                    type="button" 
+                                    className="btn btn-secondary"
+                                    onClick={handleCloseModal}
+                                >
+                                    <i className="fas fa-times me-2"></i>
+                                    Cancel
+                                </button>
+                                <button 
+                                    type="button" 
+                                    className="btn btn-primary"
+                                    onClick={handleSaveNewTicket}
+                                    disabled={!newTicketData.title || !newTicketData.description || !newTicketData.reporter}
+                                >
+                                    <i className="fas fa-save me-2"></i>
+                                    Create Ticket
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
             
             <Footer />
         </div>

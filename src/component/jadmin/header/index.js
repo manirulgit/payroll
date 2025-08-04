@@ -80,7 +80,7 @@ function Header() {
                                                 </Nav.Link>
                                             </div>
                                             <div className='menubox'>
-                                                <Nav.Link href='dashboard'>
+                                                <Nav.Link href='video'>
                                                     <img src={videoIcon} className='imgclass' alt="Video" />
                                                     <div className='menu-text'>Video</div>
                                                 </Nav.Link>
@@ -92,7 +92,7 @@ function Header() {
                                                 </Nav.Link>
                                             </div>
                                             <div className='menubox'>
-                                                <Nav.Link href='dashboard'>
+                                                <Nav.Link href='setting'>
                                                     <img src={seetingIcon} className='imgclass' alt="Setting" />
                                                     <div className='menu-text'>Setting</div>
                                                 </Nav.Link>

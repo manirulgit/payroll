@@ -17,6 +17,9 @@ import Products from './component/Products';
 import ListTicket from './component/jadmin/ListTicket';
 import ListProduct from './component/jadmin/ListProduct';
 import ExpenseList from './component/jadmin/ExpenceList';
+import Setting from './component/jadmin/Setting';
+import Video from './component/jadmin/Video';
+import AddCustomer from './component/jadmin/Addcustomer';
 
 function App() {  
   return (
@@ -37,6 +40,9 @@ function App() {
         <Route path="/" element={<Products />}></Route>
         <Route path="/listProduct" element={<ListProduct />}></Route>
         <Route path="/expenseList" element={<ExpenseList />}></Route>
+        <Route path="/setting" element={<Setting />}></Route>
+        <Route path="/video" element={<Video />}></Route>
+        <Route path="/addCustomer" element={<AddCustomer />}></Route>
         {/* Add more routes as needed */}
       </Routes>
     </BrowserRouter>

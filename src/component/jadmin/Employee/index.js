@@ -15,6 +15,30 @@ function Employee() {
     const [sortDirection, setSortDirection] = useState('asc');
     const [selectedEmployees, setSelectedEmployees] = useState([]);
     const [employeeTypeFilter, setEmployeeTypeFilter] = useState('');
+    const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
+    const [newEmployeeData, setNewEmployeeData] = useState({
+        name: '',
+        loginId: '',
+        email: '',
+        mobile: '',
+        type: 'Employee',
+        department: '',
+        designation: '',
+        salary: '',
+        joinDate: '',
+        address: '',
+        emergencyContact: '',
+        bloodGroup: '',
+        dateOfBirth: '',
+        gender: 'Male',
+        maritalStatus: 'Single',
+        nationality: 'Indian',
+        panNumber: '',
+        aadharNumber: '',
+        bankAccount: '',
+        ifscCode: '',
+        status: 'Active'
+    });
 
     // Mock API function to simulate server-side data fetching
     const fetchEmployees = async (page, size, search, sort, direction, typeFilter) => {
@@ -129,6 +153,102 @@ function Employee() {
         
         return <span className={`badge ${badgeClass}`}>{type}</span>;
     };
+
+    // Add Employee Modal Functions
+    const handleAddEmployeeInputChange = (e) => {
+        const { name, value } = e.target;
+        setNewEmployeeData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSaveNewEmployee = () => {
+        // Generate new employee ID
+        const newEmployeeId = Math.max(...employees.map(emp => emp.id), 0) + 1;
+        
+        // Create new employee object
+        const newEmployee = {
+            id: newEmployeeId,
+            ...newEmployeeData,
+            createdDate: new Date().toISOString().split('T')[0],
+            createdBy: 'Current User' // In real app, get from auth context
+        };
+
+        // Save to JSON format (in real app, send to API)
+        const employeeJsonData = {
+            timestamp: new Date().toISOString(),
+            action: 'CREATE_EMPLOYEE',
+            data: newEmployee
+        };
+
+        // Log JSON data (in real app, save to database/API)
+        console.log('New Employee Data (JSON):', JSON.stringify(employeeJsonData, null, 2));
+        
+        // For demo purposes, save to localStorage
+        const existingEmployees = JSON.parse(localStorage.getItem('employees') || '[]');
+        existingEmployees.push(newEmployee);
+        localStorage.setItem('employees', JSON.stringify(existingEmployees));
+
+        // Show success message
+        alert(`Employee ${newEmployee.name} (ID: ${newEmployeeId}) created successfully!\n\nJSON Data:\n${JSON.stringify(employeeJsonData, null, 2)}`);
+
+        // Reset form and close modal
+        setNewEmployeeData({
+            name: '',
+            loginId: '',
+            email: '',
+            mobile: '',
+            type: 'Employee',
+            department: '',
+            designation: '',
+            salary: '',
+            joinDate: '',
+            address: '',
+            emergencyContact: '',
+            bloodGroup: '',
+            dateOfBirth: '',
+            gender: 'Male',
+            maritalStatus: 'Single',
+            nationality: 'Indian',
+            panNumber: '',
+            aadharNumber: '',
+            bankAccount: '',
+            ifscCode: '',
+            status: 'Active'
+        });
+        setShowAddEmployeeModal(false);
+
+        // Refresh employees list
+        fetchEmployees(currentPage, pageSize, searchTerm, sortField, sortDirection, employeeTypeFilter);
+    };
+
+    const handleCloseModal = () => {
+        setShowAddEmployeeModal(false);
+        setNewEmployeeData({
+            name: '',
+            loginId: '',
+            email: '',
+            mobile: '',
+            type: 'Employee',
+            department: '',
+            designation: '',
+            salary: '',
+            joinDate: '',
+            address: '',
+            emergencyContact: '',
+            bloodGroup: '',
+            dateOfBirth: '',
+            gender: 'Male',
+            maritalStatus: 'Single',
+            nationality: 'Indian',
+            panNumber: '',
+            aadharNumber: '',
+            bankAccount: '',
+            ifscCode: '',
+            status: 'Active'
+        });
+    };
     return (
         <div className="employee-management">
             <Header />
@@ -185,15 +305,24 @@ function Employee() {
                                     <button type="button" className="btn btn-outline-primary">
                                         <i className="fas fa-edit me-1"></i> Edit
                                     </button>
-                                    <button type="button" className="btn btn-outline-success">
+                                    {/* <button type="button" className="btn btn-outline-success">
                                         <i className="fas fa-check me-1"></i> Activate
-                                    </button>
+                                    </button> */}
                                     <button type="button" className="btn btn-outline-danger">
                                         <i className="fas fa-trash me-1"></i> Delete
+                                    </button>
+                                    <button 
+                                        type="button" 
+                                        className="btn btn-primary add-employee-btn"
+                                        onClick={() => setShowAddEmployeeModal(true)}
+                                    >
+                                        <i className="fas fa-user-plus me-2"></i>
+                                        Add Employee
                                     </button>
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -428,6 +557,429 @@ function Employee() {
                     </div>
                 </div>
             </div>
+
+            {/* Add Employee Modal */}
+            {showAddEmployeeModal && (
+                <div className="modal fade show" style={{display: 'block', backgroundColor: 'rgba(0,0,0,0.5)'}} tabIndex="-1">
+                    <div className="modal-dialog modal-xl modal-dialog-centered" style={{maxWidth: '90%', width: '1200px'}}>
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">
+                                    <i className="fas fa-user-plus me-2 text-white"></i>
+                                    Add New Employee
+                                </h5>
+                                <button 
+                                    type="button" 
+                                    className="btn-close" 
+                                    onClick={handleCloseModal}
+                                ></button>
+                            </div>
+                            <div className="modal-body">
+                                <form>
+                                    <div className="row">
+                                        {/* Personal Information Section */}
+                                        <div className="col-12 mb-4">
+                                            <h6 className="section-title">
+                                                <i className="fas fa-user me-2"></i>
+                                                Personal Information
+                                            </h6>
+                                        </div>
+
+                                        {/* Full Name and Login ID */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-user me-2"></i>
+                                                Full Name *
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                className="form-control" 
+                                                name="name"
+                                                value={newEmployeeData.name}
+                                                onChange={handleAddEmployeeInputChange}
+                                                placeholder="Enter full name..."
+                                                required
+                                            />
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-id-card me-2"></i>
+                                                Login ID *
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                className="form-control" 
+                                                name="loginId"
+                                                value={newEmployeeData.loginId}
+                                                onChange={handleAddEmployeeInputChange}
+                                                placeholder="Enter login ID..."
+                                                required
+                                            />
+                                        </div>
+
+                                        {/* Email and Mobile */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-envelope me-2"></i>
+                                                Email Address *
+                                            </label>
+                                            <input 
+                                                type="email" 
+                                                className="form-control" 
+                                                name="email"
+                                                value={newEmployeeData.email}
+                                                onChange={handleAddEmployeeInputChange}
+                                                placeholder="Enter email address..."
+                                                required
+                                            />
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-phone me-2"></i>
+                                                Mobile Number *
+                                            </label>
+                                            <input 
+                                                type="tel" 
+                                                className="form-control" 
+                                                name="mobile"
+                                                value={newEmployeeData.mobile}
+                                                onChange={handleAddEmployeeInputChange}
+                                                placeholder="Enter mobile number..."
+                                                required
+                                            />
+                                        </div>
+
+                                        {/* Date of Birth and Gender */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-birthday-cake me-2"></i>
+                                                Date of Birth
+                                            </label>
+                                            <input 
+                                                type="date" 
+                                                className="form-control" 
+                                                name="dateOfBirth"
+                                                value={newEmployeeData.dateOfBirth}
+                                                onChange={handleAddEmployeeInputChange}
+                                            />
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-venus-mars me-2"></i>
+                                                Gender
+                                            </label>
+                                            <select 
+                                                className="form-select" 
+                                                name="gender"
+                                                value={newEmployeeData.gender}
+                                                onChange={handleAddEmployeeInputChange}
+                                            >
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+
+                                        {/* Marital Status and Blood Group */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-heart me-2"></i>
+                                                Marital Status
+                                            </label>
+                                            <select 
+                                                className="form-select" 
+                                                name="maritalStatus"
+                                                value={newEmployeeData.maritalStatus}
+                                                onChange={handleAddEmployeeInputChange}
+                                            >
+                                                <option value="Single">Single</option>
+                                                <option value="Married">Married</option>
+                                                <option value="Divorced">Divorced</option>
+                                                <option value="Widowed">Widowed</option>
+                                            </select>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-tint me-2"></i>
+                                                Blood Group
+                                            </label>
+                                            <select 
+                                                className="form-select" 
+                                                name="bloodGroup"
+                                                value={newEmployeeData.bloodGroup}
+                                                onChange={handleAddEmployeeInputChange}
+                                            >
+                                                <option value="">Select Blood Group</option>
+                                                <option value="A+">A+</option>
+                                                <option value="A-">A-</option>
+                                                <option value="B+">B+</option>
+                                                <option value="B-">B-</option>
+                                                <option value="AB+">AB+</option>
+                                                <option value="AB-">AB-</option>
+                                                <option value="O+">O+</option>
+                                                <option value="O-">O-</option>
+                                            </select>
+                                        </div>
+
+                                        {/* Employment Information Section */}
+                                        <div className="col-12 mb-4 mt-4">
+                                            <h6 className="section-title">
+                                                <i className="fas fa-briefcase me-2"></i>
+                                                Employment Information
+                                            </h6>
+                                        </div>
+
+                                        {/* Employee Type and Department */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-user-cog me-2"></i>
+                                                Employee Type *
+                                            </label>
+                                            <select 
+                                                className="form-select" 
+                                                name="type"
+                                                value={newEmployeeData.type}
+                                                onChange={handleAddEmployeeInputChange}
+                                                required
+                                            >
+                                                <option value="Employee">Employee</option>
+                                                <option value="Manager">Manager</option>
+                                                <option value="Admin">Admin</option>
+                                            </select>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-building me-2"></i>
+                                                Department *
+                                            </label>
+                                            <select 
+                                                className="form-select" 
+                                                name="department"
+                                                value={newEmployeeData.department}
+                                                onChange={handleAddEmployeeInputChange}
+                                                required
+                                            >
+                                                <option value="">Select Department</option>
+                                                <option value="IT">IT</option>
+                                                <option value="HR">HR</option>
+                                                <option value="Finance">Finance</option>
+                                                <option value="Marketing">Marketing</option>
+                                                <option value="Sales">Sales</option>
+                                                <option value="Operations">Operations</option>
+                                            </select>
+                                        </div>
+
+                                        {/* Designation and Salary */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-id-badge me-2"></i>
+                                                Designation *
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                className="form-control" 
+                                                name="designation"
+                                                value={newEmployeeData.designation}
+                                                onChange={handleAddEmployeeInputChange}
+                                                placeholder="Enter designation..."
+                                                required
+                                            />
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-money-bill-wave me-2"></i>
+                                                Salary
+                                            </label>
+                                            <input 
+                                                type="number" 
+                                                className="form-control" 
+                                                name="salary"
+                                                value={newEmployeeData.salary}
+                                                onChange={handleAddEmployeeInputChange}
+                                                placeholder="Enter salary amount..."
+                                            />
+                                        </div>
+
+                                        {/* Join Date and Status */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-calendar-alt me-2"></i>
+                                                Join Date *
+                                            </label>
+                                            <input 
+                                                type="date" 
+                                                className="form-control" 
+                                                name="joinDate"
+                                                value={newEmployeeData.joinDate}
+                                                onChange={handleAddEmployeeInputChange}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-toggle-on me-2"></i>
+                                                Status
+                                            </label>
+                                            <select 
+                                                className="form-select" 
+                                                name="status"
+                                                value={newEmployeeData.status}
+                                                onChange={handleAddEmployeeInputChange}
+                                            >
+                                                <option value="Active">Active</option>
+                                                <option value="Inactive">Inactive</option>
+                                            </select>
+                                        </div>
+
+                                        {/* Contact Information Section */}
+                                        <div className="col-12 mb-4 mt-4">
+                                            <h6 className="section-title">
+                                                <i className="fas fa-address-book me-2"></i>
+                                                Contact Information
+                                            </h6>
+                                        </div>
+
+                                        {/* Address */}
+                                        <div className="col-md-12 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-map-marker-alt me-2"></i>
+                                                Address
+                                            </label>
+                                            <textarea 
+                                                className="form-control" 
+                                                name="address"
+                                                value={newEmployeeData.address}
+                                                onChange={handleAddEmployeeInputChange}
+                                                rows="3"
+                                                placeholder="Enter complete address..."
+                                            ></textarea>
+                                        </div>
+
+                                        {/* Emergency Contact and Nationality */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-phone-alt me-2"></i>
+                                                Emergency Contact
+                                            </label>
+                                            <input 
+                                                type="tel" 
+                                                className="form-control" 
+                                                name="emergencyContact"
+                                                value={newEmployeeData.emergencyContact}
+                                                onChange={handleAddEmployeeInputChange}
+                                                placeholder="Enter emergency contact number..."
+                                            />
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-flag me-2"></i>
+                                                Nationality
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                className="form-control" 
+                                                name="nationality"
+                                                value={newEmployeeData.nationality}
+                                                onChange={handleAddEmployeeInputChange}
+                                                placeholder="Enter nationality..."
+                                            />
+                                        </div>
+
+                                        {/* Identity Information Section */}
+                                        <div className="col-12 mb-4 mt-4">
+                                            <h6 className="section-title">
+                                                <i className="fas fa-id-card-alt me-2"></i>
+                                                Identity & Banking Information
+                                            </h6>
+                                        </div>
+
+                                        {/* PAN and Aadhar */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-credit-card me-2"></i>
+                                                PAN Number
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                className="form-control" 
+                                                name="panNumber"
+                                                value={newEmployeeData.panNumber}
+                                                onChange={handleAddEmployeeInputChange}
+                                                placeholder="Enter PAN number..."
+                                                style={{textTransform: 'uppercase'}}
+                                            />
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-id-card me-2"></i>
+                                                Aadhar Number
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                className="form-control" 
+                                                name="aadharNumber"
+                                                value={newEmployeeData.aadharNumber}
+                                                onChange={handleAddEmployeeInputChange}
+                                                placeholder="Enter Aadhar number..."
+                                            />
+                                        </div>
+
+                                        {/* Bank Account and IFSC Code */}
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-university me-2"></i>
+                                                Bank Account Number
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                className="form-control" 
+                                                name="bankAccount"
+                                                value={newEmployeeData.bankAccount}
+                                                onChange={handleAddEmployeeInputChange}
+                                                placeholder="Enter bank account number..."
+                                            />
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label">
+                                                <i className="fas fa-code me-2"></i>
+                                                IFSC Code
+                                            </label>
+                                            <input 
+                                                type="text" 
+                                                className="form-control" 
+                                                name="ifscCode"
+                                                value={newEmployeeData.ifscCode}
+                                                onChange={handleAddEmployeeInputChange}
+                                                placeholder="Enter IFSC code..."
+                                                style={{textTransform: 'uppercase'}}
+                                            />
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div className="modal-footer">
+                                <button 
+                                    type="button" 
+                                    className="btn btn-secondary"
+                                    onClick={handleCloseModal}
+                                >
+                                    <i className="fas fa-times me-2"></i>
+                                    Cancel
+                                </button>
+                                <button 
+                                    type="button" 
+                                    className="btn btn-success"
+                                    onClick={handleSaveNewEmployee}
+                                    disabled={!newEmployeeData.name || !newEmployeeData.loginId || !newEmployeeData.email || !newEmployeeData.mobile}
+                                >
+                                    <i className="fas fa-user-plus me-2"></i>
+                                    Add Employee
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
             
             <Footer />
         </div>
