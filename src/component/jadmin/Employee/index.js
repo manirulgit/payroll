@@ -3,6 +3,7 @@ import Footer from '../Footer';
 import Header from '../header';
 import Nabvar from '../navbar';
 import './Employee.css';
+import EmployeeService from '../../../services/employeeService';
 
 function Employee() {
     const [employees, setEmployees] = useState([]);
@@ -40,62 +41,129 @@ function Employee() {
         status: 'Active'
     });
 
-    // Mock API function to simulate server-side data fetching
+    // API function to fetch employee data from server
     const fetchEmployees = async (page, size, search, sort, direction, typeFilter) => {
         setLoading(true);
         
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        // Mock employee data
-        const mockEmployees = [
-            { id: 1, name: 'John Smith', loginId: 'jsmith', type: 'Admin', email: 'john.smith@company.com', mobile: '9876543210', status: 'Active', department: 'IT', joinDate: '2023-01-15' },
-            { id: 2, name: 'Sarah Johnson', loginId: 'sjohnson', type: 'Manager', email: 'sarah.johnson@company.com', mobile: '9876543211', status: 'Active', department: 'HR', joinDate: '2023-02-20' },
-            { id: 3, name: 'Mike Davis', loginId: 'mdavis', type: 'Employee', email: 'mike.davis@company.com', mobile: '9876543212', status: 'Active', department: 'Finance', joinDate: '2023-03-10' },
-            { id: 4, name: 'Emily Brown', loginId: 'ebrown', type: 'Employee', email: 'emily.brown@company.com', mobile: '9876543213', status: 'Inactive', department: 'Marketing', joinDate: '2023-04-05' },
-            { id: 5, name: 'David Wilson', loginId: 'dwilson', type: 'Manager', email: 'david.wilson@company.com', mobile: '9876543214', status: 'Active', department: 'Sales', joinDate: '2023-05-12' },
-            { id: 6, name: 'Lisa Anderson', loginId: 'landerson', type: 'Employee', email: 'lisa.anderson@company.com', mobile: '9876543215', status: 'Active', department: 'IT', joinDate: '2023-06-18' },
-            { id: 7, name: 'Robert Taylor', loginId: 'rtaylor', type: 'Admin', email: 'robert.taylor@company.com', mobile: '9876543216', status: 'Active', department: 'Operations', joinDate: '2023-07-22' },
-            { id: 8, name: 'Jennifer Garcia', loginId: 'jgarcia', type: 'Employee', email: 'jennifer.garcia@company.com', mobile: '9876543217', status: 'Active', department: 'HR', joinDate: '2023-08-14' },
-            { id: 9, name: 'Michael Martinez', loginId: 'mmartinez', type: 'Manager', email: 'michael.martinez@company.com', mobile: '9876543218', status: 'Inactive', department: 'Finance', joinDate: '2023-09-08' },
-            { id: 10, name: 'Jessica Lee', loginId: 'jlee', type: 'Employee', email: 'jessica.lee@company.com', mobile: '9876543219', status: 'Active', department: 'Marketing', joinDate: '2023-10-03' },
-            { id: 11, name: 'Christopher White', loginId: 'cwhite', type: 'Admin', email: 'christopher.white@company.com', mobile: '9876543220', status: 'Active', department: 'IT', joinDate: '2023-11-16' },
-            { id: 12, name: 'Amanda Thompson', loginId: 'athompson', type: 'Employee', email: 'amanda.thompson@company.com', mobile: '9876543221', status: 'Active', department: 'Sales', joinDate: '2023-12-12' }
-        ];
+        try {
+            // Call API service
+            const result = await EmployeeService.getEmployees({
+                page,
+                size,
+                search,
+                sort,
+                direction,
+                typeFilter
+            });
 
-        // Apply filtering
-        let filteredEmployees = mockEmployees.filter(emp => {
-            const matchesSearch = emp.name.toLowerCase().includes(search.toLowerCase()) ||
-                                emp.email.toLowerCase().includes(search.toLowerCase()) ||
-                                emp.loginId.toLowerCase().includes(search.toLowerCase());
-            const matchesType = typeFilter === '' || emp.type === typeFilter;
-            return matchesSearch && matchesType;
-        });
-
-        // Apply sorting
-        filteredEmployees.sort((a, b) => {
-            let aVal = a[sort];
-            let bVal = b[sort];
-            
-            if (typeof aVal === 'string') {
-                aVal = aVal.toLowerCase();
-                bVal = bVal.toLowerCase();
-            }
-            
-            if (direction === 'asc') {
-                return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+            if (result.success) {
+                // Update state with API response
+                console.log('API Response:', result.data);
+                
+                // Check if result.data is an array directly or has employees property
+                let employeeArray = [];
+                if (Array.isArray(result.data)) {
+                    // If result.data is directly an array
+                    employeeArray = result.data;
+                } else if (result.data && Array.isArray(result.data.employees)) {
+                    // If result.data has employees property
+                    employeeArray = result.data.employees;
+                } else if (result.data && result.data.data && Array.isArray(result.data.data)) {
+                    // If nested under data property
+                    employeeArray = result.data.data;
+                } else {
+                    // Fallback: try to extract array from any property
+                    employeeArray = result.data || [];
+                }
+                
+                console.log('Employee Array:', employeeArray);
+                
+                // Validate that each employee has required fields, add defaults if missing
+                const validatedEmployees = employeeArray.map((emp, index) => ({
+                    id: emp.id || emp.employee_id || emp.emp_id || (index + 1),
+                    name: emp.emp_name  || 'N/A',
+                    loginId: emp.loginId || emp.login_id || emp.username || emp.email || 'N/A',
+                    type: emp.type || emp.employee_type || emp.role || 'Employee',
+                    email: emp.email || emp.email_address || 'N/A',
+                    mobile: emp.mobile || emp.phone || emp.contact || emp.mobile_number || 'N/A',
+                    department: emp.department || emp.dept || emp.division || 'N/A',
+                    status: emp.status || emp.emp_status || emp.active ? 'Active' : 'Inactive',
+                    joinDate: emp.joinDate || emp.join_date || emp.date_of_joining || 'N/A',
+                    designation: emp.designation || emp.position || emp.job_title || 'N/A',
+                    salary: emp.salary || emp.basic_salary || emp.monthly_salary || 0
+                }));
+                
+                console.log('Validated Employees:', validatedEmployees);
+                setEmployees(validatedEmployees);
+                
+                // Set total records - use array length if no totalRecords provided
+                const totalCount = result.data.totalRecords || 
+                                 result.data.total || 
+                                 result.data.count || 
+                                 employeeArray.length;
+                setTotalRecords(totalCount);
             } else {
-                return aVal > bVal ? -1 : aVal < bVal ? 1 : 0;
+                throw new Error(result.error);
             }
-        });
+            
+        } catch (error) {
+            console.error('Error fetching employees:', error);
+            
+            // Fallback to mock data if API fails
+            console.log('Falling back to mock data...');
+            const mockEmployees = [
+                { id: 1, name: 'John Smith', loginId: 'jsmith', type: 'Admin', email: 'john.smith@company.com', mobile: '9876543210', status: 'Active', department: 'IT', joinDate: '2023-01-15' },
+                { id: 2, name: 'Sarah Johnson', loginId: 'sjohnson', type: 'Manager', email: 'sarah.johnson@company.com', mobile: '9876543211', status: 'Active', department: 'HR', joinDate: '2023-02-20' },
+                { id: 3, name: 'Mike Davis', loginId: 'mdavis', type: 'Employee', email: 'mike.davis@company.com', mobile: '9876543212', status: 'Active', department: 'Finance', joinDate: '2023-03-10' },
+                { id: 4, name: 'Emily Brown', loginId: 'ebrown', type: 'Employee', email: 'emily.brown@company.com', mobile: '9876543213', status: 'Inactive', department: 'Marketing', joinDate: '2023-04-05' },
+                { id: 5, name: 'David Wilson', loginId: 'dwilson', type: 'Manager', email: 'david.wilson@company.com', mobile: '9876543214', status: 'Active', department: 'Sales', joinDate: '2023-05-12' },
+                { id: 6, name: 'Lisa Anderson', loginId: 'landerson', type: 'Employee', email: 'lisa.anderson@company.com', mobile: '9876543215', status: 'Active', department: 'IT', joinDate: '2023-06-18' },
+                { id: 7, name: 'Robert Taylor', loginId: 'rtaylor', type: 'Admin', email: 'robert.taylor@company.com', mobile: '9876543216', status: 'Active', department: 'Operations', joinDate: '2023-07-22' },
+                { id: 8, name: 'Jennifer Garcia', loginId: 'jgarcia', type: 'Employee', email: 'jennifer.garcia@company.com', mobile: '9876543217', status: 'Active', department: 'HR', joinDate: '2023-08-14' },
+                { id: 9, name: 'Michael Martinez', loginId: 'mmartinez', type: 'Manager', email: 'michael.martinez@company.com', mobile: '9876543218', status: 'Inactive', department: 'Finance', joinDate: '2023-09-08' },
+                { id: 10, name: 'Jessica Lee', loginId: 'jlee', type: 'Employee', email: 'jessica.lee@company.com', mobile: '9876543219', status: 'Active', department: 'Marketing', joinDate: '2023-10-03' },
+                { id: 11, name: 'Christopher White', loginId: 'cwhite', type: 'Admin', email: 'christopher.white@company.com', mobile: '9876543220', status: 'Active', department: 'IT', joinDate: '2023-11-16' },
+                { id: 12, name: 'Amanda Thompson', loginId: 'athompson', type: 'Employee', email: 'amanda.thompson@company.com', mobile: '9876543221', status: 'Active', department: 'Sales', joinDate: '2023-12-12' }
+            ];
 
-        // Apply pagination
-        const startIndex = (page - 1) * size;
-        const paginatedEmployees = filteredEmployees.slice(startIndex, startIndex + size);
+            // Apply client-side filtering and sorting for fallback data
+            let filteredEmployees = mockEmployees.filter(emp => {
+                const matchesSearch = emp.name.toLowerCase().includes(search.toLowerCase()) ||
+                                    emp.email.toLowerCase().includes(search.toLowerCase()) ||
+                                    emp.loginId.toLowerCase().includes(search.toLowerCase());
+                const matchesType = typeFilter === '' || emp.type === typeFilter;
+                return matchesSearch && matchesType;
+            });
 
-        setEmployees(paginatedEmployees);
-        setTotalRecords(filteredEmployees.length);
-        setLoading(false);
+            // Apply sorting
+            filteredEmployees.sort((a, b) => {
+                let aVal = a[sort];
+                let bVal = b[sort];
+                
+                if (typeof aVal === 'string') {
+                    aVal = aVal.toLowerCase();
+                    bVal = bVal.toLowerCase();
+                }
+                
+                if (direction === 'asc') {
+                    return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+                } else {
+                    return aVal > bVal ? -1 : aVal < bVal ? 1 : 0;
+                }
+            });
+
+            // Apply pagination
+            const startIndex = (page - 1) * size;
+            const paginatedEmployees = filteredEmployees.slice(startIndex, startIndex + size);
+
+            setEmployees(paginatedEmployees);
+            setTotalRecords(filteredEmployees.length);
+            
+            // Show error notification to user
+            alert('Unable to connect to server. Displaying sample data.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -163,64 +231,78 @@ function Employee() {
         }));
     };
 
-    const handleSaveNewEmployee = () => {
-        // Generate new employee ID
-        const newEmployeeId = Math.max(...employees.map(emp => emp.id), 0) + 1;
-        
-        // Create new employee object
-        const newEmployee = {
-            id: newEmployeeId,
-            ...newEmployeeData,
-            createdDate: new Date().toISOString().split('T')[0],
-            createdBy: 'Current User' // In real app, get from auth context
-        };
+    const handleSaveNewEmployee = async () => {
+        try {
+            // Call API service to create employee
+            const result = await EmployeeService.createEmployee(newEmployeeData);
 
-        // Save to JSON format (in real app, send to API)
-        const employeeJsonData = {
-            timestamp: new Date().toISOString(),
-            action: 'CREATE_EMPLOYEE',
-            data: newEmployee
-        };
+            if (result.success) {
+                // Show success message with API response
+                alert(`Employee ${result.data.name} (ID: ${result.data.id}) created successfully!`);
+            } else {
+                throw new Error(result.error);
+            }
+            
+        } catch (error) {
+            console.error('Error creating employee:', error);
+            
+            // Fallback to local creation if API fails
+            const newEmployeeId = Math.max(...employees.map(emp => emp.id), 0) + 1;
+            
+            const newEmployee = {
+                id: newEmployeeId,
+                ...newEmployeeData,
+                createdDate: new Date().toISOString().split('T')[0],
+                createdBy: 'Current User'
+            };
 
-        // Log JSON data (in real app, save to database/API)
-        console.log('New Employee Data (JSON):', JSON.stringify(employeeJsonData, null, 2));
-        
-        // For demo purposes, save to localStorage
-        const existingEmployees = JSON.parse(localStorage.getItem('employees') || '[]');
-        existingEmployees.push(newEmployee);
-        localStorage.setItem('employees', JSON.stringify(existingEmployees));
+            // Save to JSON format (in real app, send to API)
+            const employeeJsonData = {
+                timestamp: new Date().toISOString(),
+                action: 'CREATE_EMPLOYEE',
+                data: newEmployee
+            };
 
-        // Show success message
-        alert(`Employee ${newEmployee.name} (ID: ${newEmployeeId}) created successfully!\n\nJSON Data:\n${JSON.stringify(employeeJsonData, null, 2)}`);
+            // Log JSON data (in real app, save to database/API)
+            console.log('New Employee Data (JSON):', JSON.stringify(employeeJsonData, null, 2));
+            
+            // For demo purposes, save to localStorage
+            const existingEmployees = JSON.parse(localStorage.getItem('employees') || '[]');
+            existingEmployees.push(newEmployee);
+            localStorage.setItem('employees', JSON.stringify(existingEmployees));
 
-        // Reset form and close modal
-        setNewEmployeeData({
-            name: '',
-            loginId: '',
-            email: '',
-            mobile: '',
-            type: 'Employee',
-            department: '',
-            designation: '',
-            salary: '',
-            joinDate: '',
-            address: '',
-            emergencyContact: '',
-            bloodGroup: '',
-            dateOfBirth: '',
-            gender: 'Male',
-            maritalStatus: 'Single',
-            nationality: 'Indian',
-            panNumber: '',
-            aadharNumber: '',
-            bankAccount: '',
-            ifscCode: '',
-            status: 'Active'
-        });
-        setShowAddEmployeeModal(false);
+            // Show success message with fallback data
+            alert(`Employee ${newEmployee.name} (ID: ${newEmployeeId}) created successfully!\n\nNote: Unable to connect to server. Data saved locally.`);
+        } finally {
+            // Reset form and close modal
+            setNewEmployeeData({
+                name: '',
+                loginId: '',
+                email: '',
+                mobile: '',
+                type: 'Employee',
+                department: '',
+                designation: '',
+                salary: '',
+                joinDate: '',
+                address: '',
+                emergencyContact: '',
+                bloodGroup: '',
+                dateOfBirth: '',
+                gender: 'Male',
+                maritalStatus: 'Single',
+                nationality: 'Indian',
+                panNumber: '',
+                aadharNumber: '',
+                bankAccount: '',
+                ifscCode: '',
+                status: 'Active'
+            });
+            setShowAddEmployeeModal(false);
 
-        // Refresh employees list
-        fetchEmployees(currentPage, pageSize, searchTerm, sortField, sortDirection, employeeTypeFilter);
+            // Refresh employees list
+            fetchEmployees(currentPage, pageSize, searchTerm, sortField, sortDirection, employeeTypeFilter);
+        }
     };
 
     const handleCloseModal = () => {
