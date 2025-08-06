@@ -58,7 +58,7 @@ function Employee() {
 
             if (result.success) {
                 // Update state with API response
-                console.log('API Response:', result.data);
+                //console.log('API Response:', result.data);
                 
                 // Check if result.data is an array directly or has employees property
                 let employeeArray = [];
@@ -76,7 +76,7 @@ function Employee() {
                     employeeArray = result.data || [];
                 }
                 
-                console.log('Employee Array:', employeeArray);
+                //console.log('Employee Array:', employeeArray);
                 
                 // Validate that each employee has required fields, add defaults if missing
                 const validatedEmployees = employeeArray.map((emp, index) => ({
@@ -93,14 +93,12 @@ function Employee() {
                     salary: emp.salary || emp.basic_salary || emp.monthly_salary || 0
                 }));
                 
-                console.log('Validated Employees:', validatedEmployees);
+                console.log('result.data.total_count', result.data.total_count);
                 setEmployees(validatedEmployees);
                 
                 // Set total records - use array length if no totalRecords provided
-                const totalCount = result.data.totalRecords || 
-                                 result.data.total || 
-                                 result.data.count || 
-                                 employeeArray.length;
+                const totalCount = result.data.total_count;
+                                
                 setTotalRecords(totalCount);
             } else {
                 throw new Error(result.error);
@@ -109,58 +107,12 @@ function Employee() {
         } catch (error) {
             console.error('Error fetching employees:', error);
             
-            // Fallback to mock data if API fails
-            console.log('Falling back to mock data...');
-            const mockEmployees = [
-                { id: 1, name: 'John Smith', loginId: 'jsmith', type: 'Admin', email: 'john.smith@company.com', mobile: '9876543210', status: 'Active', department: 'IT', joinDate: '2023-01-15' },
-                { id: 2, name: 'Sarah Johnson', loginId: 'sjohnson', type: 'Manager', email: 'sarah.johnson@company.com', mobile: '9876543211', status: 'Active', department: 'HR', joinDate: '2023-02-20' },
-                { id: 3, name: 'Mike Davis', loginId: 'mdavis', type: 'Employee', email: 'mike.davis@company.com', mobile: '9876543212', status: 'Active', department: 'Finance', joinDate: '2023-03-10' },
-                { id: 4, name: 'Emily Brown', loginId: 'ebrown', type: 'Employee', email: 'emily.brown@company.com', mobile: '9876543213', status: 'Inactive', department: 'Marketing', joinDate: '2023-04-05' },
-                { id: 5, name: 'David Wilson', loginId: 'dwilson', type: 'Manager', email: 'david.wilson@company.com', mobile: '9876543214', status: 'Active', department: 'Sales', joinDate: '2023-05-12' },
-                { id: 6, name: 'Lisa Anderson', loginId: 'landerson', type: 'Employee', email: 'lisa.anderson@company.com', mobile: '9876543215', status: 'Active', department: 'IT', joinDate: '2023-06-18' },
-                { id: 7, name: 'Robert Taylor', loginId: 'rtaylor', type: 'Admin', email: 'robert.taylor@company.com', mobile: '9876543216', status: 'Active', department: 'Operations', joinDate: '2023-07-22' },
-                { id: 8, name: 'Jennifer Garcia', loginId: 'jgarcia', type: 'Employee', email: 'jennifer.garcia@company.com', mobile: '9876543217', status: 'Active', department: 'HR', joinDate: '2023-08-14' },
-                { id: 9, name: 'Michael Martinez', loginId: 'mmartinez', type: 'Manager', email: 'michael.martinez@company.com', mobile: '9876543218', status: 'Inactive', department: 'Finance', joinDate: '2023-09-08' },
-                { id: 10, name: 'Jessica Lee', loginId: 'jlee', type: 'Employee', email: 'jessica.lee@company.com', mobile: '9876543219', status: 'Active', department: 'Marketing', joinDate: '2023-10-03' },
-                { id: 11, name: 'Christopher White', loginId: 'cwhite', type: 'Admin', email: 'christopher.white@company.com', mobile: '9876543220', status: 'Active', department: 'IT', joinDate: '2023-11-16' },
-                { id: 12, name: 'Amanda Thompson', loginId: 'athompson', type: 'Employee', email: 'amanda.thompson@company.com', mobile: '9876543221', status: 'Active', department: 'Sales', joinDate: '2023-12-12' }
-            ];
-
-            // Apply client-side filtering and sorting for fallback data
-            let filteredEmployees = mockEmployees.filter(emp => {
-                const matchesSearch = emp.name.toLowerCase().includes(search.toLowerCase()) ||
-                                    emp.email.toLowerCase().includes(search.toLowerCase()) ||
-                                    emp.loginId.toLowerCase().includes(search.toLowerCase());
-                const matchesType = typeFilter === '' || emp.type === typeFilter;
-                return matchesSearch && matchesType;
-            });
-
-            // Apply sorting
-            filteredEmployees.sort((a, b) => {
-                let aVal = a[sort];
-                let bVal = b[sort];
-                
-                if (typeof aVal === 'string') {
-                    aVal = aVal.toLowerCase();
-                    bVal = bVal.toLowerCase();
-                }
-                
-                if (direction === 'asc') {
-                    return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
-                } else {
-                    return aVal > bVal ? -1 : aVal < bVal ? 1 : 0;
-                }
-            });
-
-            // Apply pagination
-            const startIndex = (page - 1) * size;
-            const paginatedEmployees = filteredEmployees.slice(startIndex, startIndex + size);
-
-            setEmployees(paginatedEmployees);
-            setTotalRecords(filteredEmployees.length);
+            // Clear employees data on API failure
+            setEmployees([]);
+            setTotalRecords(0);
             
             // Show error notification to user
-            alert('Unable to connect to server. Displaying sample data.');
+            alert('Unable to connect to server. Please check your connection and try again.');
         } finally {
             setLoading(false);
         }
@@ -246,33 +198,8 @@ function Employee() {
         } catch (error) {
             console.error('Error creating employee:', error);
             
-            // Fallback to local creation if API fails
-            const newEmployeeId = Math.max(...employees.map(emp => emp.id), 0) + 1;
-            
-            const newEmployee = {
-                id: newEmployeeId,
-                ...newEmployeeData,
-                createdDate: new Date().toISOString().split('T')[0],
-                createdBy: 'Current User'
-            };
-
-            // Save to JSON format (in real app, send to API)
-            const employeeJsonData = {
-                timestamp: new Date().toISOString(),
-                action: 'CREATE_EMPLOYEE',
-                data: newEmployee
-            };
-
-            // Log JSON data (in real app, save to database/API)
-            console.log('New Employee Data (JSON):', JSON.stringify(employeeJsonData, null, 2));
-            
-            // For demo purposes, save to localStorage
-            const existingEmployees = JSON.parse(localStorage.getItem('employees') || '[]');
-            existingEmployees.push(newEmployee);
-            localStorage.setItem('employees', JSON.stringify(existingEmployees));
-
-            // Show success message with fallback data
-            alert(`Employee ${newEmployee.name} (ID: ${newEmployeeId}) created successfully!\n\nNote: Unable to connect to server. Data saved locally.`);
+            // Show error message
+            alert('Unable to create employee. Please check your connection and try again.');
         } finally {
             // Reset form and close modal
             setNewEmployeeData({

@@ -67,7 +67,12 @@ class EmployeeService {
             const response = await corsEnabledFetch(`${API_BASE_URL}/admin/employeeList`, {
                 method: 'POST',
                 body: JSON.stringify({
-                    page: page.toString()
+                    offset: page.toString(),
+                    limit: size.toString(),
+                    search,
+                    sort,
+                    direction,
+                    typeFilter
                 })
             });
             
