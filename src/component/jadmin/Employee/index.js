@@ -90,7 +90,7 @@ function Employee() {
                     email: emp.email || emp.email_address || 'N/A',
                     mobile: emp.mobile || emp.phone || emp.contact || emp.mobile_number || 'N/A',
                     department: emp.department || emp.dept || emp.division || 'N/A',
-                    status: emp.status || emp.emp_status || emp.active ? 'Active' : 'Inactive',
+                    status: emp.status || 'Inactive',
                     joinDate: emp.joinDate || emp.join_date || emp.date_of_joining || 'N/A',
                     designation: emp.designation || emp.position || emp.job_title || 'N/A',
                     salary: emp.salary || emp.basic_salary || emp.monthly_salary || 0
