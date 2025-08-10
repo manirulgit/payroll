@@ -81,7 +81,8 @@ class EmployeeService {
             }
 
             const data = await response.json();
-            console.log('Raw API Response:', JSON.stringify(data, null, 2));
+            console.log(data);
+            //console.log('Raw API Response:', JSON.stringify(data, null, 2));
             return {
                 success: true,
                 data: data

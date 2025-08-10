@@ -55,6 +55,7 @@ function Employee() {
                 direction,
                 typeFilter
             });
+            
 
             if (result.success) {
                 // Update state with API response
@@ -81,9 +82,11 @@ function Employee() {
                 // Validate that each employee has required fields, add defaults if missing
                 const validatedEmployees = employeeArray.map((emp, index) => ({
                     id: emp.id || emp.employee_id || emp.emp_id || (index + 1),
+                    unique_id : emp.unique_id  || 'N/A',
                     name: emp.emp_name  || 'N/A',
+                    address: emp.address  || 'N/A',
                     loginId: emp.loginId || emp.login_id || emp.username || emp.email || 'N/A',
-                    type: emp.type || emp.employee_type || emp.role || 'Employee',
+                    type: emp.stake_type || emp.employee_type || emp.role || 'Employee',
                     email: emp.email || emp.email_address || 'N/A',
                     mobile: emp.mobile || emp.phone || emp.contact || emp.mobile_number || 'N/A',
                     department: emp.department || emp.dept || emp.division || 'N/A',
@@ -289,9 +292,8 @@ function Employee() {
                                 onChange={(e) => setEmployeeTypeFilter(e.target.value)}
                             >
                                 <option value="">All Types</option>
-                                <option value="Admin">Admin</option>
-                                <option value="Manager">Manager</option>
-                                <option value="Employee">Employee</option>
+                                <option value="2">Admin</option>
+                                <option value="4">Employee</option>
                             </select>
                         </div>
                         <div className="col-md-2">
@@ -439,6 +441,7 @@ function Employee() {
                                         <i className={`fas fa-sort-${sortDirection === 'asc' ? 'up' : 'down'} ms-1`}></i>
                                     )}
                                 </th>
+                                <th style={{width: '150px'}}>Address</th>
                                 <th 
                                     className="sortable" 
                                     onClick={() => handleSort('status')}
@@ -448,6 +451,7 @@ function Employee() {
                                         <i className={`fas fa-sort-${sortDirection === 'asc' ? 'up' : 'down'} ms-1`}></i>
                                     )}
                                 </th>
+                                
                                 <th style={{width: '150px'}}>Actions</th>
                             </tr>
                         </thead>
@@ -462,7 +466,7 @@ function Employee() {
                                             onChange={() => handleSelectEmployee(employee.id)}
                                         />
                                     </td>
-                                    <td>{employee.id}</td>
+                                    <td>{employee.unique_id}</td>
                                     <td>
                                         <div className="d-flex align-items-center">
                                             <div className="avatar me-3">
@@ -476,6 +480,7 @@ function Employee() {
                                     <td>{employee.email}</td>
                                     <td>{employee.mobile}</td>
                                     <td>{employee.department}</td>
+                                    <td>{employee.address}</td>
                                     <td>{getStatusBadge(employee.status)}</td>
                                     <td>
                                         <div className="action-buttons">
