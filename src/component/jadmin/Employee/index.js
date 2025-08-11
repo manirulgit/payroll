@@ -17,6 +17,16 @@ function Employee() {
     const [selectedEmployees, setSelectedEmployees] = useState([]);
     const [employeeTypeFilter, setEmployeeTypeFilter] = useState('');
     const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
+    const [showViewEmployeeModal, setShowViewEmployeeModal] = useState(false);
+    const [showEditEmployeeModal, setShowEditEmployeeModal] = useState(false);
+    const [showDeleteEmployeeModal, setShowDeleteEmployeeModal] = useState(false);
+    const [viewEmployeeData, setViewEmployeeData] = useState(null);
+    const [editEmployeeData, setEditEmployeeData] = useState(null);
+    const [deleteEmployeeData, setDeleteEmployeeData] = useState(null);
+    const [loadingEmployeeDetails, setLoadingEmployeeDetails] = useState(false);
+    const [loadingEditEmployeeDetails, setLoadingEditEmployeeDetails] = useState(false);
+    const [savingEmployeeChanges, setSavingEmployeeChanges] = useState(false);
+    const [deletingEmployee, setDeletingEmployee] = useState(false);
     const [newEmployeeData, setNewEmployeeData] = useState({
         name: '',
         loginId: '',
@@ -175,6 +185,235 @@ function Employee() {
         else badgeClass = 'badge-success';
         
         return <span className={`badge ${badgeClass}`}>{type}</span>;
+    };
+
+    // View Employee Modal Functions
+    const handleViewEmployee = async (employeeId) => {
+        setLoadingEmployeeDetails(true);
+        setShowViewEmployeeModal(true);
+        
+        try {
+            // Call API service to get employee details
+            const result = await EmployeeService.getEmployeeById(employeeId);
+            
+            if (result.success) {
+                // Set employee data from API response
+                setViewEmployeeData({
+                    id: result.data.id || result.data.employee_id || result.data.emp_id || employeeId,
+                    unique_id: result.data.unique_id || 'N/A',
+                    name: result.data.emp_name || result.data.name || 'N/A',
+                    email: result.data.email || result.data.email_address || 'N/A',
+                    mobile: result.data.mobile || result.data.phone || result.data.contact || result.data.mobile_number || 'N/A',
+                    address: result.data.address || 'N/A',
+                    type: result.data.stake_type || result.data.employee_type || result.data.role || 'Employee',
+                    status: result.data.status || 'Inactive',
+                    joinDate: result.data.joinDate || result.data.join_date || result.data.date_of_joining || 'N/A',
+                    designation: result.data.designation || result.data.position || result.data.job_title || 'N/A',
+                    department: result.data.department || result.data.dept || result.data.division || 'N/A',
+                    salary: result.data.salary || result.data.basic_salary || result.data.monthly_salary || 0,
+                    dateOfBirth: result.data.dateOfBirth || result.data.date_of_birth || result.data.dob || 'N/A',
+                    gender: result.data.gender || 'N/A',
+                    maritalStatus: result.data.maritalStatus || result.data.marital_status || 'N/A',
+                    nationality: result.data.nationality || 'N/A',
+                    emergencyContact: result.data.emergencyContact || result.data.emergency_contact || 'N/A',
+                    bloodGroup: result.data.bloodGroup || result.data.blood_group || 'N/A',
+                    panNumber: result.data.panNumber || result.data.pan_number || 'N/A',
+                    aadharNumber: result.data.aadharNumber || result.data.aadhar_number || 'N/A',
+                    bankAccount: result.data.bankAccount || result.data.bank_account || 'N/A',
+                    ifscCode: result.data.ifscCode || result.data.ifsc_code || 'N/A'
+                });
+            } else {
+                throw new Error(result.error);
+            }
+        } catch (error) {
+            console.error('Error fetching employee details:', error);
+            
+            // Fallback: use data from the current employees list
+            const employee = employees.find(emp => emp.id === employeeId);
+            if (employee) {
+                setViewEmployeeData({
+                    ...employee,
+                    dateOfBirth: 'N/A',
+                    gender: 'N/A',
+                    maritalStatus: 'N/A',
+                    nationality: 'N/A',
+                    emergencyContact: 'N/A',
+                    bloodGroup: 'N/A',
+                    panNumber: 'N/A',
+                    aadharNumber: 'N/A',
+                    bankAccount: 'N/A',
+                    ifscCode: 'N/A',
+                    department: 'N/A'
+                });
+            } else {
+                setViewEmployeeData(null);
+                alert('Unable to load employee details. Please try again.');
+            }
+        } finally {
+            setLoadingEmployeeDetails(false);
+        }
+    };
+
+    const handleCloseViewModal = () => {
+        setShowViewEmployeeModal(false);
+        setViewEmployeeData(null);
+    };
+
+    // Edit Employee Modal Functions
+    const handleEditEmployee = async (employeeId) => {
+        setLoadingEditEmployeeDetails(true);
+        setShowEditEmployeeModal(true);
+        
+        try {
+            // Call API service to get employee details
+            const result = await EmployeeService.getEmployeeById(employeeId);
+            
+            if (result.success) {
+                // Set employee data from API response for editing
+                setEditEmployeeData({
+                    id: result.data.id || result.data.employee_id || result.data.emp_id || employeeId,
+                    unique_id: result.data.unique_id || 'N/A',
+                    name: result.data.emp_name || result.data.name || '',
+                    email: result.data.email || result.data.email_address || '',
+                    mobile: result.data.mobile || result.data.phone || result.data.contact || result.data.mobile_number || '',
+                    address: result.data.address || '',
+                    type: result.data.stake_type || result.data.employee_type || result.data.role || 'Employee',
+                    status: result.data.status || 'Inactive',
+                    joinDate: result.data.joinDate || result.data.join_date || result.data.date_of_joining || '',
+                    designation: result.data.designation || result.data.position || result.data.job_title || '',
+                    department: result.data.department || result.data.dept || result.data.division || '',
+                    salary: result.data.salary || result.data.basic_salary || result.data.monthly_salary || '',
+                    dateOfBirth: result.data.dateOfBirth || result.data.date_of_birth || result.data.dob || '',
+                    gender: result.data.gender || 'Male',
+                    maritalStatus: result.data.maritalStatus || result.data.marital_status || 'Single',
+                    nationality: result.data.nationality || 'Indian',
+                    emergencyContact: result.data.emergencyContact || result.data.emergency_contact || '',
+                    bloodGroup: result.data.bloodGroup || result.data.blood_group || '',
+                    panNumber: result.data.panNumber || result.data.pan_number || '',
+                    aadharNumber: result.data.aadharNumber || result.data.aadhar_number || '',
+                    bankAccount: result.data.bankAccount || result.data.bank_account || '',
+                    ifscCode: result.data.ifscCode || result.data.ifsc_code || ''
+                });
+            } else {
+                throw new Error(result.error);
+            }
+        } catch (error) {
+            console.error('Error fetching employee details for editing:', error);
+            
+            // Fallback: use data from the current employees list
+            const employee = employees.find(emp => emp.id === employeeId);
+            if (employee) {
+                setEditEmployeeData({
+                    id: employee.id,
+                    unique_id: employee.unique_id,
+                    name: employee.name,
+                    email: employee.email,
+                    mobile: employee.mobile,
+                    address: employee.address,
+                    type: employee.type,
+                    status: employee.status,
+                    joinDate: employee.joinDate,
+                    designation: employee.designation,
+                    department: employee.department,
+                    salary: employee.salary,
+                    dateOfBirth: '',
+                    gender: 'Male',
+                    maritalStatus: 'Single',
+                    nationality: 'Indian',
+                    emergencyContact: '',
+                    bloodGroup: '',
+                    panNumber: '',
+                    aadharNumber: '',
+                    bankAccount: '',
+                    ifscCode: ''
+                });
+            } else {
+                setEditEmployeeData(null);
+                alert('Unable to load employee details for editing. Please try again.');
+            }
+        } finally {
+            setLoadingEditEmployeeDetails(false);
+        }
+    };
+
+    const handleEditEmployeeInputChange = (e) => {
+        const { name, value } = e.target;
+        setEditEmployeeData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSaveEditedEmployee = async () => {
+        setSavingEmployeeChanges(true);
+        
+        try {
+            // Call API service to update employee
+            const result = await EmployeeService.updateEmployee(editEmployeeData.id, editEmployeeData);
+
+            if (result.success) {
+                // Show success message
+                alert(`Employee ${editEmployeeData.name} updated successfully!`);
+                
+                // Close modal and refresh the list
+                setShowEditEmployeeModal(false);
+                setEditEmployeeData(null);
+                
+                // Refresh employees list
+                fetchEmployees(currentPage, pageSize, searchTerm, sortField, sortDirection, employeeTypeFilter);
+            } else {
+                throw new Error(result.error);
+            }
+        } catch (error) {
+            console.error('Error updating employee:', error);
+            alert('Unable to update employee. Please check your connection and try again.');
+        } finally {
+            setSavingEmployeeChanges(false);
+        }
+    };
+
+    const handleCloseEditModal = () => {
+        setShowEditEmployeeModal(false);
+        setEditEmployeeData(null);
+    };
+
+    // Delete Employee Modal Functions
+    const handleDeleteEmployee = (employee) => {
+        setDeleteEmployeeData(employee);
+        setShowDeleteEmployeeModal(true);
+    };
+
+    const handleConfirmDeleteEmployee = async () => {
+        setDeletingEmployee(true);
+        
+        try {
+            // Call API service to delete (make inactive) employee
+            const result = await EmployeeService.deleteEmployee(deleteEmployeeData.id);
+
+            if (result.success) {
+                // Show success message
+                alert(`Employee ${deleteEmployeeData.name} has been deactivated successfully!`);
+                
+                // Close modal and clear data
+                setShowDeleteEmployeeModal(false);
+                setDeleteEmployeeData(null);
+                
+                // Refresh employees list
+                fetchEmployees(currentPage, pageSize, searchTerm, sortField, sortDirection, employeeTypeFilter);
+            } else {
+                throw new Error(result.error);
+            }
+        } catch (error) {
+            console.error('Error deleting employee:', error);
+            alert('Unable to deactivate employee. Please check your connection and try again.');
+        } finally {
+            setDeletingEmployee(false);
+        }
+    };
+
+    const handleCloseDeleteModal = () => {
+        setShowDeleteEmployeeModal(false);
+        setDeleteEmployeeData(null);
     };
 
     // Add Employee Modal Functions
@@ -370,15 +609,15 @@ function Employee() {
                     <table className="table table-hover">
                         <thead>
                             <tr>
-                                <th style={{width: '50px'}}>
+                                {/* <th style={{width: '50px'}}>
                                     <input 
                                         type="checkbox" 
                                         className="form-check-input"
                                         onChange={handleSelectAll}
                                         checked={selectedEmployees.length === employees.length && employees.length > 0}
                                     />
-                                </th>
-                                <th 
+                                </th> */}
+                                {/* <th 
                                     className="sortable" 
                                     onClick={() => handleSort('id')}
                                     style={{cursor: 'pointer'}}
@@ -386,11 +625,11 @@ function Employee() {
                                     ID {sortField === 'id' && (
                                         <i className={`fas fa-sort-${sortDirection === 'asc' ? 'up' : 'down'} ms-1`}></i>
                                     )}
-                                </th>
+                                </th> */}
                                 <th 
                                     className="sortable" 
                                     onClick={() => handleSort('name')}
-                                    style={{cursor: 'pointer'}}
+                                    style={{cursor: 'pointer', minWidth: '200px'}}
                                 >
                                     Name {sortField === 'name' && (
                                         <i className={`fas fa-sort-${sortDirection === 'asc' ? 'up' : 'down'} ms-1`}></i>
@@ -402,15 +641,6 @@ function Employee() {
                                     style={{cursor: 'pointer'}}
                                 >
                                     Login ID {sortField === 'loginId' && (
-                                        <i className={`fas fa-sort-${sortDirection === 'asc' ? 'up' : 'down'} ms-1`}></i>
-                                    )}
-                                </th>
-                                <th 
-                                    className="sortable" 
-                                    onClick={() => handleSort('type')}
-                                    style={{cursor: 'pointer'}}
-                                >
-                                    Type {sortField === 'type' && (
                                         <i className={`fas fa-sort-${sortDirection === 'asc' ? 'up' : 'down'} ms-1`}></i>
                                     )}
                                 </th>
@@ -432,7 +662,7 @@ function Employee() {
                                         <i className={`fas fa-sort-${sortDirection === 'asc' ? 'up' : 'down'} ms-1`}></i>
                                     )}
                                 </th>
-                                <th 
+                                {/* <th 
                                     className="sortable" 
                                     onClick={() => handleSort('department')}
                                     style={{cursor: 'pointer'}}
@@ -440,7 +670,7 @@ function Employee() {
                                     Department {sortField === 'department' && (
                                         <i className={`fas fa-sort-${sortDirection === 'asc' ? 'up' : 'down'} ms-1`}></i>
                                     )}
-                                </th>
+                                </th> */}
                                 <th style={{width: '150px'}}>Address</th>
                                 <th 
                                     className="sortable" 
@@ -458,39 +688,62 @@ function Employee() {
                         <tbody>
                             {employees.map((employee) => (
                                 <tr key={employee.id} className={selectedEmployees.includes(employee.id) ? 'table-active' : ''}>
-                                    <td>
+                                    {/* <td>
                                         <input 
                                             type="checkbox" 
                                             className="form-check-input"
                                             checked={selectedEmployees.includes(employee.id)}
                                             onChange={() => handleSelectEmployee(employee.id)}
                                         />
-                                    </td>
-                                    <td>{employee.unique_id}</td>
-                                    <td>
+                                    </td> */}
+                                    {/* <td>{employee.unique_id}</td> */}
+                                    <td style={{minWidth: '200px', wordWrap: 'break-word', whiteSpace: 'normal'}}>
                                         <div className="d-flex align-items-center">
-                                            <div className="avatar me-3">
-                                                {employee.name.split(' ').map(n => n[0]).join('')}
+                                            <div className="avatar me-2" style={{
+                                                width: '32px', 
+                                                height: '32px', 
+                                                borderRadius: '50%', 
+                                                backgroundColor: '#007bff', 
+                                                color: 'white', 
+                                                display: 'flex', 
+                                                alignItems: 'center', 
+                                                justifyContent: 'center', 
+                                                fontSize: '12px',
+                                                fontWeight: 'bold',
+                                                flexShrink: 0
+                                            }}>
+                                                {employee.name && employee.name !== 'N/A' ? employee.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
                                             </div>
-                                            <strong>{employee.name}</strong>
+                                            <span style={{fontSize: '14px', lineHeight: '1.4'}}>{employee.name}</span>
                                         </div>
                                     </td>
-                                    <td>{employee.loginId}</td>
-                                    <td>{getTypeBadge(employee.type)}</td>
+                                    <td>{employee.unique_id}</td>
                                     <td>{employee.email}</td>
                                     <td>{employee.mobile}</td>
-                                    <td>{employee.department}</td>
+                                    {/* <td>{employee.department}</td> */}
                                     <td>{employee.address}</td>
                                     <td>{getStatusBadge(employee.status)}</td>
                                     <td>
                                         <div className="action-buttons">
-                                            <button className="btn btn-sm btn-outline-primary me-1" title="View">
+                                            <button 
+                                                className="btn btn-sm btn-outline-primary me-1" 
+                                                title="View"
+                                                onClick={() => handleViewEmployee(employee.id)}
+                                            >
                                                 <i className="fas fa-eye"></i>
                                             </button>
-                                            <button className="btn btn-sm btn-outline-success me-1" title="Edit">
+                                            <button 
+                                                className="btn btn-sm btn-outline-success me-1" 
+                                                title="Edit"
+                                                onClick={() => handleEditEmployee(employee.id)}
+                                            >
                                                 <i className="fas fa-edit"></i>
                                             </button>
-                                            <button className="btn btn-sm btn-outline-danger" title="Delete">
+                                            <button 
+                                                className="btn btn-sm btn-outline-danger" 
+                                                title="Delete"
+                                                onClick={() => handleDeleteEmployee(employee)}
+                                            >
                                                 <i className="fas fa-trash"></i>
                                             </button>
                                         </div>
@@ -988,6 +1241,771 @@ function Employee() {
                                 >
                                     <i className="fas fa-user-plus me-2"></i>
                                     Add Employee
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            
+            {/* View Employee Modal */}
+            {showViewEmployeeModal && (
+                <div className="modal fade show" style={{display: 'block', backgroundColor: 'rgba(0,0,0,0.5)'}} tabIndex="-1">
+                    <div className="modal-dialog modal-lg modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header" style={{minHeight: 'auto', padding: '0.75rem 1rem'}}>
+                                <h5 className="modal-title" style={{fontSize: '1.1rem', margin: 0}}>
+                                    <i className="fas fa-user me-2"></i>
+                                    Employee Details
+                                </h5>
+                                <button 
+                                    type="button" 
+                                    className="btn-close" 
+                                    style={{fontSize: '0.8rem'}}
+                                    onClick={handleCloseViewModal}
+                                ></button>
+                            </div>
+                            <div className="modal-body">
+                                {loadingEmployeeDetails ? (
+                                    <div className="text-center py-5">
+                                        <div className="spinner-border" role="status">
+                                            <span className="visually-hidden">Loading...</span>
+                                        </div>
+                                        <p className="mt-2">Loading employee details...</p>
+                                    </div>
+                                ) : viewEmployeeData ? (
+                                    <div className="row">
+                                        {/* Employee Header with Avatar */}
+                                        <div className="col-12 mb-4">
+                                            <div className="d-flex align-items-center">
+                                                <div className="avatar me-3" style={{
+                                                    width: '80px', 
+                                                    height: '80px', 
+                                                    borderRadius: '50%', 
+                                                    backgroundColor: '#007bff', 
+                                                    color: 'white', 
+                                                    display: 'flex', 
+                                                    alignItems: 'center', 
+                                                    justifyContent: 'center', 
+                                                    fontSize: '24px',
+                                                    fontWeight: 'bold'
+                                                }}>
+                                                    {viewEmployeeData.name && viewEmployeeData.name !== 'N/A' ? 
+                                                        viewEmployeeData.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
+                                                </div>
+                                                <div>
+                                                    <h4 className="mb-1">{viewEmployeeData.name}</h4>
+                                                    <p className="text-muted mb-1">ID: {viewEmployeeData.unique_id}</p>
+                                                    <div className="d-flex gap-2">
+                                                        {getTypeBadge(viewEmployeeData.type)}
+                                                        {getStatusBadge(viewEmployeeData.status)}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Personal Information */}
+                                        <div className="col-12 mb-3">
+                                            <h6 className="border-bottom pb-2 mb-3">
+                                                <i className="fas fa-user me-2"></i>
+                                                Personal Information
+                                            </h6>
+                                        </div>
+                                        
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label text-muted small">Full Name</label>
+                                            <p className="fw-bold">{viewEmployeeData.name}</p>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label text-muted small">Employee ID</label>
+                                            <p className="fw-bold">{viewEmployeeData.unique_id}</p>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label text-muted small">Date of Birth</label>
+                                            <p className="fw-bold">{viewEmployeeData.dateOfBirth}</p>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label text-muted small">Gender</label>
+                                            <p className="fw-bold">{viewEmployeeData.gender}</p>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label text-muted small">Marital Status</label>
+                                            <p className="fw-bold">{viewEmployeeData.maritalStatus}</p>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label text-muted small">Blood Group</label>
+                                            <p className="fw-bold">{viewEmployeeData.bloodGroup}</p>
+                                        </div>
+
+                                        {/* Contact Information */}
+                                        <div className="col-12 mb-3 mt-4">
+                                            <h6 className="border-bottom pb-2 mb-3">
+                                                <i className="fas fa-address-book me-2"></i>
+                                                Contact Information
+                                            </h6>
+                                        </div>
+                                        
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label text-muted small">Email Address</label>
+                                            <p className="fw-bold">{viewEmployeeData.email}</p>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label text-muted small">Mobile Number</label>
+                                            <p className="fw-bold">{viewEmployeeData.mobile}</p>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label text-muted small">Emergency Contact</label>
+                                            <p className="fw-bold">{viewEmployeeData.emergencyContact}</p>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label text-muted small">Nationality</label>
+                                            <p className="fw-bold">{viewEmployeeData.nationality}</p>
+                                        </div>
+                                        <div className="col-12 mb-3">
+                                            <label className="form-label text-muted small">Address</label>
+                                            <p className="fw-bold">{viewEmployeeData.address}</p>
+                                        </div>
+
+                                        {/* Employment Information */}
+                                        <div className="col-12 mb-3 mt-4">
+                                            <h6 className="border-bottom pb-2 mb-3">
+                                                <i className="fas fa-briefcase me-2"></i>
+                                                Employment Information
+                                            </h6>
+                                        </div>
+                                        
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label text-muted small">Department</label>
+                                            <p className="fw-bold">{viewEmployeeData.department}</p>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label text-muted small">Designation</label>
+                                            <p className="fw-bold">{viewEmployeeData.designation}</p>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label text-muted small">Join Date</label>
+                                            <p className="fw-bold">{viewEmployeeData.joinDate}</p>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label text-muted small">Salary</label>
+                                            <p className="fw-bold">₹{viewEmployeeData.salary}</p>
+                                        </div>
+
+                                        {/* Identity Information */}
+                                        <div className="col-12 mb-3 mt-4">
+                                            <h6 className="border-bottom pb-2 mb-3">
+                                                <i className="fas fa-id-card-alt me-2"></i>
+                                                Identity & Banking Information
+                                            </h6>
+                                        </div>
+                                        
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label text-muted small">PAN Number</label>
+                                            <p className="fw-bold">{viewEmployeeData.panNumber}</p>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label text-muted small">Aadhar Number</label>
+                                            <p className="fw-bold">{viewEmployeeData.aadharNumber}</p>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label text-muted small">Bank Account</label>
+                                            <p className="fw-bold">{viewEmployeeData.bankAccount}</p>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label className="form-label text-muted small">IFSC Code</label>
+                                            <p className="fw-bold">{viewEmployeeData.ifscCode}</p>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-5">
+                                        <i className="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                                        <h5>Unable to Load Employee Details</h5>
+                                        <p className="text-muted">Please try again later.</p>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="modal-footer">
+                                <button 
+                                    type="button" 
+                                    className="btn btn-secondary"
+                                    onClick={handleCloseViewModal}
+                                >
+                                    <i className="fas fa-times me-2"></i>
+                                    Close
+                                </button>
+                                <button 
+                                    type="button" 
+                                    className="btn btn-primary"
+                                    onClick={() => {
+                                        handleCloseViewModal();
+                                        // You can add edit functionality here
+                                        console.log('Edit employee:', viewEmployeeData?.id);
+                                    }}
+                                >
+                                    <i className="fas fa-edit me-2"></i>
+                                    Edit Employee
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            
+            {/* Edit Employee Modal */}
+            {showEditEmployeeModal && (
+                <div className="modal fade show" style={{display: 'block', backgroundColor: 'rgba(0,0,0,0.5)'}} tabIndex="-1">
+                    <div className="modal-dialog modal-xl modal-dialog-centered" style={{maxWidth: '90%', width: '1200px'}}>
+                        <div className="modal-content">
+                            <div className="modal-header" style={{minHeight: 'auto', padding: '0.75rem 1rem'}}>
+                                <h5 className="modal-title" style={{fontSize: '1.1rem', margin: 0}}>
+                                    <i className="fas fa-edit me-2"></i>
+                                    Edit Employee
+                                </h5>
+                                <button 
+                                    type="button" 
+                                    className="btn-close" 
+                                    style={{fontSize: '0.8rem'}}
+                                    onClick={handleCloseEditModal}
+                                ></button>
+                            </div>
+                            <div className="modal-body">
+                                {loadingEditEmployeeDetails ? (
+                                    <div className="text-center py-5">
+                                        <div className="spinner-border" role="status">
+                                            <span className="visually-hidden">Loading...</span>
+                                        </div>
+                                        <p className="mt-2">Loading employee details...</p>
+                                    </div>
+                                ) : editEmployeeData ? (
+                                    <form>
+                                        <div className="row">
+                                            {/* Personal Information Section */}
+                                            <div className="col-12 mb-4">
+                                                <h6 className="section-title">
+                                                    <i className="fas fa-user me-2"></i>
+                                                    Personal Information
+                                                </h6>
+                                            </div>
+
+                                            {/* Full Name and Employee ID */}
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-user me-2"></i>
+                                                    Full Name *
+                                                </label>
+                                                <input 
+                                                    type="text" 
+                                                    className="form-control" 
+                                                    name="name"
+                                                    value={editEmployeeData.name}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                    placeholder="Enter full name..."
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-id-card me-2"></i>
+                                                    Employee ID
+                                                </label>
+                                                <input 
+                                                    type="text" 
+                                                    className="form-control" 
+                                                    value={editEmployeeData.unique_id}
+                                                    disabled
+                                                    style={{backgroundColor: '#f8f9fa'}}
+                                                />
+                                            </div>
+
+                                            {/* Email and Mobile */}
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-envelope me-2"></i>
+                                                    Email Address *
+                                                </label>
+                                                <input 
+                                                    type="email" 
+                                                    className="form-control" 
+                                                    name="email"
+                                                    value={editEmployeeData.email}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                    placeholder="Enter email address..."
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-phone me-2"></i>
+                                                    Mobile Number *
+                                                </label>
+                                                <input 
+                                                    type="tel" 
+                                                    className="form-control" 
+                                                    name="mobile"
+                                                    value={editEmployeeData.mobile}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                    placeholder="Enter mobile number..."
+                                                    required
+                                                />
+                                            </div>
+
+                                            {/* Date of Birth and Gender */}
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-birthday-cake me-2"></i>
+                                                    Date of Birth
+                                                </label>
+                                                <input 
+                                                    type="date" 
+                                                    className="form-control" 
+                                                    name="dateOfBirth"
+                                                    value={editEmployeeData.dateOfBirth}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                />
+                                            </div>
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-venus-mars me-2"></i>
+                                                    Gender
+                                                </label>
+                                                <select 
+                                                    className="form-select" 
+                                                    name="gender"
+                                                    value={editEmployeeData.gender}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                >
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                            </div>
+
+                                            {/* Marital Status and Blood Group */}
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-heart me-2"></i>
+                                                    Marital Status
+                                                </label>
+                                                <select 
+                                                    className="form-select" 
+                                                    name="maritalStatus"
+                                                    value={editEmployeeData.maritalStatus}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                >
+                                                    <option value="Single">Single</option>
+                                                    <option value="Married">Married</option>
+                                                    <option value="Divorced">Divorced</option>
+                                                    <option value="Widowed">Widowed</option>
+                                                </select>
+                                            </div>
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-tint me-2"></i>
+                                                    Blood Group
+                                                </label>
+                                                <select 
+                                                    className="form-select" 
+                                                    name="bloodGroup"
+                                                    value={editEmployeeData.bloodGroup}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                >
+                                                    <option value="">Select Blood Group</option>
+                                                    <option value="A+">A+</option>
+                                                    <option value="A-">A-</option>
+                                                    <option value="B+">B+</option>
+                                                    <option value="B-">B-</option>
+                                                    <option value="AB+">AB+</option>
+                                                    <option value="AB-">AB-</option>
+                                                    <option value="O+">O+</option>
+                                                    <option value="O-">O-</option>
+                                                </select>
+                                            </div>
+
+                                            {/* Employment Information Section */}
+                                            <div className="col-12 mb-4 mt-4">
+                                                <h6 className="section-title">
+                                                    <i className="fas fa-briefcase me-2"></i>
+                                                    Employment Information
+                                                </h6>
+                                            </div>
+
+                                            {/* Employee Type and Department */}
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-user-cog me-2"></i>
+                                                    Employee Type *
+                                                </label>
+                                                <select 
+                                                    className="form-select" 
+                                                    name="type"
+                                                    value={editEmployeeData.type}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                    required
+                                                >
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="Admin">Admin</option>
+                                                </select>
+                                            </div>
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-building me-2"></i>
+                                                    Department *
+                                                </label>
+                                                <select 
+                                                    className="form-select" 
+                                                    name="department"
+                                                    value={editEmployeeData.department}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                    required
+                                                >
+                                                    <option value="">Select Department</option>
+                                                    <option value="IT">IT</option>
+                                                    <option value="HR">HR</option>
+                                                    <option value="Finance">Finance</option>
+                                                    <option value="Marketing">Marketing</option>
+                                                    <option value="Sales">Sales</option>
+                                                    <option value="Operations">Operations</option>
+                                                </select>
+                                            </div>
+
+                                            {/* Designation and Salary */}
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-id-badge me-2"></i>
+                                                    Designation *
+                                                </label>
+                                                <input 
+                                                    type="text" 
+                                                    className="form-control" 
+                                                    name="designation"
+                                                    value={editEmployeeData.designation}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                    placeholder="Enter designation..."
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-money-bill-wave me-2"></i>
+                                                    Salary
+                                                </label>
+                                                <input 
+                                                    type="number" 
+                                                    className="form-control" 
+                                                    name="salary"
+                                                    value={editEmployeeData.salary}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                    placeholder="Enter salary amount..."
+                                                />
+                                            </div>
+
+                                            {/* Join Date and Status */}
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-calendar-alt me-2"></i>
+                                                    Join Date *
+                                                </label>
+                                                <input 
+                                                    type="date" 
+                                                    className="form-control" 
+                                                    name="joinDate"
+                                                    value={editEmployeeData.joinDate}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-toggle-on me-2"></i>
+                                                    Status
+                                                </label>
+                                                <select 
+                                                    className="form-select" 
+                                                    name="status"
+                                                    value={editEmployeeData.status}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                >
+                                                    <option value="Active">Active</option>
+                                                    <option value="Inactive">Inactive</option>
+                                                </select>
+                                            </div>
+
+                                            {/* Contact Information Section */}
+                                            <div className="col-12 mb-4 mt-4">
+                                                <h6 className="section-title">
+                                                    <i className="fas fa-address-book me-2"></i>
+                                                    Contact Information
+                                                </h6>
+                                            </div>
+
+                                            {/* Address */}
+                                            <div className="col-md-12 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-map-marker-alt me-2"></i>
+                                                    Address
+                                                </label>
+                                                <textarea 
+                                                    className="form-control" 
+                                                    name="address"
+                                                    value={editEmployeeData.address}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                    rows="3"
+                                                    placeholder="Enter complete address..."
+                                                ></textarea>
+                                            </div>
+
+                                            {/* Emergency Contact and Nationality */}
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-phone-alt me-2"></i>
+                                                    Emergency Contact
+                                                </label>
+                                                <input 
+                                                    type="tel" 
+                                                    className="form-control" 
+                                                    name="emergencyContact"
+                                                    value={editEmployeeData.emergencyContact}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                    placeholder="Enter emergency contact number..."
+                                                />
+                                            </div>
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-flag me-2"></i>
+                                                    Nationality
+                                                </label>
+                                                <input 
+                                                    type="text" 
+                                                    className="form-control" 
+                                                    name="nationality"
+                                                    value={editEmployeeData.nationality}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                    placeholder="Enter nationality..."
+                                                />
+                                            </div>
+
+                                            {/* Identity Information Section */}
+                                            <div className="col-12 mb-4 mt-4">
+                                                <h6 className="section-title">
+                                                    <i className="fas fa-id-card-alt me-2"></i>
+                                                    Identity & Banking Information
+                                                </h6>
+                                            </div>
+
+                                            {/* PAN and Aadhar */}
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-credit-card me-2"></i>
+                                                    PAN Number
+                                                </label>
+                                                <input 
+                                                    type="text" 
+                                                    className="form-control" 
+                                                    name="panNumber"
+                                                    value={editEmployeeData.panNumber}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                    placeholder="Enter PAN number..."
+                                                    style={{textTransform: 'uppercase'}}
+                                                />
+                                            </div>
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-id-card me-2"></i>
+                                                    Aadhar Number
+                                                </label>
+                                                <input 
+                                                    type="text" 
+                                                    className="form-control" 
+                                                    name="aadharNumber"
+                                                    value={editEmployeeData.aadharNumber}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                    placeholder="Enter Aadhar number..."
+                                                />
+                                            </div>
+
+                                            {/* Bank Account and IFSC Code */}
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-university me-2"></i>
+                                                    Bank Account Number
+                                                </label>
+                                                <input 
+                                                    type="text" 
+                                                    className="form-control" 
+                                                    name="bankAccount"
+                                                    value={editEmployeeData.bankAccount}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                    placeholder="Enter bank account number..."
+                                                />
+                                            </div>
+                                            <div className="col-md-6 mb-3">
+                                                <label className="form-label">
+                                                    <i className="fas fa-code me-2"></i>
+                                                    IFSC Code
+                                                </label>
+                                                <input 
+                                                    type="text" 
+                                                    className="form-control" 
+                                                    name="ifscCode"
+                                                    value={editEmployeeData.ifscCode}
+                                                    onChange={handleEditEmployeeInputChange}
+                                                    placeholder="Enter IFSC code..."
+                                                    style={{textTransform: 'uppercase'}}
+                                                />
+                                            </div>
+                                        </div>
+                                    </form>
+                                ) : (
+                                    <div className="text-center py-5">
+                                        <i className="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                                        <h5>Unable to Load Employee Details</h5>
+                                        <p className="text-muted">Please try again later.</p>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="modal-footer">
+                                <button 
+                                    type="button" 
+                                    className="btn btn-secondary"
+                                    onClick={handleCloseEditModal}
+                                    disabled={savingEmployeeChanges}
+                                >
+                                    <i className="fas fa-times me-2"></i>
+                                    Cancel
+                                </button>
+                                <button 
+                                    type="button" 
+                                    className="btn btn-success"
+                                    onClick={handleSaveEditedEmployee}
+                                    disabled={savingEmployeeChanges || !editEmployeeData?.name || !editEmployeeData?.email || !editEmployeeData?.mobile}
+                                >
+                                    {savingEmployeeChanges ? (
+                                        <>
+                                            <div className="spinner-border spinner-border-sm me-2" role="status">
+                                                <span className="visually-hidden">Loading...</span>
+                                            </div>
+                                            Saving...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <i className="fas fa-save me-2"></i>
+                                            Save Changes
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            
+            {/* Delete Employee Confirmation Modal */}
+            {showDeleteEmployeeModal && deleteEmployeeData && (
+                <div className="modal fade show" style={{display: 'block', backgroundColor: 'rgba(0,0,0,0.5)'}} tabIndex="-1">
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header" style={{minHeight: 'auto', padding: '0.75rem 1rem', backgroundColor: '#dc3545', color: 'white'}}>
+                                <h5 className="modal-title" style={{fontSize: '1.1rem', margin: 0}}>
+                                    <i className="fas fa-exclamation-triangle me-2"></i>
+                                    Confirm Delete
+                                </h5>
+                                <button 
+                                    type="button" 
+                                    className="btn-close btn-close-white" 
+                                    style={{fontSize: '0.8rem'}}
+                                    onClick={handleCloseDeleteModal}
+                                    disabled={deletingEmployee}
+                                ></button>
+                            </div>
+                            <div className="modal-body">
+                                <div className="text-center">
+                                    {/* Employee Info */}
+                                    <div className="mb-4">
+                                        <div className="avatar mx-auto mb-3" style={{
+                                            width: '60px', 
+                                            height: '60px', 
+                                            borderRadius: '50%', 
+                                            backgroundColor: '#dc3545', 
+                                            color: 'white', 
+                                            display: 'flex', 
+                                            alignItems: 'center', 
+                                            justifyContent: 'center', 
+                                            fontSize: '20px',
+                                            fontWeight: 'bold'
+                                        }}>
+                                            {deleteEmployeeData.name && deleteEmployeeData.name !== 'N/A' ? 
+                                                deleteEmployeeData.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U'}
+                                        </div>
+                                        <h5 className="mb-2">{deleteEmployeeData.name}</h5>
+                                        <p className="text-muted mb-1">ID: {deleteEmployeeData.unique_id}</p>
+                                        <p className="text-muted mb-0">{deleteEmployeeData.email}</p>
+                                    </div>
+
+                                    {/* Warning Message */}
+                                    <div className="alert alert-warning" role="alert">
+                                        <i className="fas fa-exclamation-triangle me-2"></i>
+                                        <strong>Warning!</strong> This action will deactivate the employee.
+                                    </div>
+
+                                    {/* Confirmation Text */}
+                                    <div className="mb-4">
+                                        <h6 className="text-danger mb-3">Are you sure you want to delete this employee?</h6>
+                                        <ul className="list-unstyled text-start">
+                                            <li className="mb-2">
+                                                <i className="fas fa-check text-success me-2"></i>
+                                                Employee status will be changed to <strong>Inactive</strong>
+                                            </li>
+                                            <li className="mb-2">
+                                                <i className="fas fa-check text-success me-2"></i>
+                                                Employee data will be preserved
+                                            </li>
+                                            <li className="mb-2">
+                                                <i className="fas fa-info-circle text-info me-2"></i>
+                                                This action can be reversed by reactivating the employee
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    {/* Final Confirmation */}
+                                    <div className="bg-light p-3 rounded">
+                                        <p className="mb-0 text-muted">
+                                            <small>
+                                                <strong>Note:</strong> The employee will no longer have access to the system but their records will remain for historical purposes.
+                                            </small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button 
+                                    type="button" 
+                                    className="btn btn-secondary"
+                                    onClick={handleCloseDeleteModal}
+                                    disabled={deletingEmployee}
+                                >
+                                    <i className="fas fa-times me-2"></i>
+                                    Cancel
+                                </button>
+                                <button 
+                                    type="button" 
+                                    className="btn btn-danger"
+                                    onClick={handleConfirmDeleteEmployee}
+                                    disabled={deletingEmployee}
+                                >
+                                    {deletingEmployee ? (
+                                        <>
+                                            <div className="spinner-border spinner-border-sm me-2" role="status">
+                                                <span className="visually-hidden">Loading...</span>
+                                            </div>
+                                            Deactivating...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <i className="fas fa-user-slash me-2"></i>
+                                            Yes, Deactivate Employee
+                                        </>
+                                    )}
                                 </button>
                             </div>
                         </div>

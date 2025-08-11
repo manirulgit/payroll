@@ -1,9 +1,8 @@
-// Employee API Service
+// Attendance API Service
 const API_BASE_URL = "https://jyotiaircon.com/admin/api"
 
 // Helper function to get auth headers
 const getAuthHeaders = () => {
-   // const token = localStorage.getItem('token');
     return {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -40,39 +39,31 @@ const corsEnabledFetch = async (url, options = {}) => {
     }
 };
 
-// Employee API service class
-class EmployeeService {
-    // Fetch employees with pagination, search, sorting, and filtering
-    static async getEmployees(params = {}) {
+// Attendance API service class
+class AttendanceService {
+    // Fetch attendance records with filtering
+    static async getAttendance(params = {}) {
         const {
             page = 1,
-            size = 10,
-            search = '',
-            sort = 'id',
-            direction = 'asc',
-            typeFilter = ''
+            size = 100,
+            startDate = '',
+            endDate = '',
+            employeeId = '',
+            status = ''
         } = params;
 
-        const queryParams = new URLSearchParams({
-            page: page.toString(),
-            size: size.toString(),
-            search,
-            sort,
-            direction,
-            typeFilter
-        });
-       // console.log(`Fetching employees with params: ${queryParams.toString()}`);
+        console.log(`Fetching attendance with params:`, params);
 
         try {
-            const response = await corsEnabledFetch(`${API_BASE_URL}/admin/employeeList`, {
+            const response = await corsEnabledFetch(`${API_BASE_URL}/admin/attendanceList`, {
                 method: 'POST',
                 body: JSON.stringify({
                     offset: page.toString(),
                     limit: size.toString(),
-                    search,
-                    sort,
-                    direction,
-                    typeFilter
+                    startDate,
+                    endDate,
+                    employeeId,
+                    status
                 })
             });
             
@@ -81,14 +72,13 @@ class EmployeeService {
             }
 
             const data = await response.json();
-            console.log(data);
-            //console.log('Raw API Response:', JSON.stringify(data, null, 2));
+            console.log('Attendance API Response:', data);
             return {
                 success: true,
                 data: data
             };
         } catch (error) {
-            console.error('Error fetching employees:', error);
+            console.error('Error fetching attendance:', error);
             return {
                 success: false,
                 error: error.message,
@@ -97,15 +87,20 @@ class EmployeeService {
         }
     }
 
-    // Create new employee
-    static async createEmployee(employeeData) {
+    // Get attendance for a specific employee
+    static async getEmployeeAttendance(employeeId, params = {}) {
+        const {
+            startDate = '',
+            endDate = ''
+        } = params;
+
         try {
-            const response = await corsEnabledFetch(`${API_BASE_URL}/employees`, {
+            const response = await corsEnabledFetch(`${API_BASE_URL}/admin/employeeAttendance`, {
                 method: 'POST',
                 body: JSON.stringify({
-                    ...employeeData,
-                    createdDate: new Date().toISOString().split('T')[0],
-                    createdBy: 'Current User' // In real app, get from auth context
+                    employeeId,
+                    startDate,
+                    endDate
                 })
             });
 
@@ -114,12 +109,13 @@ class EmployeeService {
             }
 
             const data = await response.json();
+            console.log('Employee attendance API response:', data);
             return {
                 success: true,
                 data: data
             };
         } catch (error) {
-            console.error('Error creating employee:', error);
+            console.error('Error fetching employee attendance:', error);
             return {
                 success: false,
                 error: error.message,
@@ -128,14 +124,46 @@ class EmployeeService {
         }
     }
 
-    // Update employee
-    static async updateEmployee(employeeId, employeeData) {
+    // Mark attendance for an employee
+    static async markAttendance(attendanceData) {
         try {
-            const response = await corsEnabledFetch(`${API_BASE_URL}/admin/updateEmployee`, {
+            const response = await corsEnabledFetch(`${API_BASE_URL}/admin/markAttendance`, {
                 method: 'POST',
                 body: JSON.stringify({
-                    id: employeeId,
-                    ...employeeData,
+                    ...attendanceData,
+                    markedDate: new Date().toISOString().split('T')[0],
+                    markedBy: 'Current User'
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('Mark attendance API response:', data);
+            return {
+                success: true,
+                data: data
+            };
+        } catch (error) {
+            console.error('Error marking attendance:', error);
+            return {
+                success: false,
+                error: error.message,
+                data: null
+            };
+        }
+    }
+
+    // Update attendance record
+    static async updateAttendance(attendanceId, attendanceData) {
+        try {
+            const response = await corsEnabledFetch(`${API_BASE_URL}/admin/updateAttendance`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    id: attendanceId,
+                    ...attendanceData,
                     updatedDate: new Date().toISOString().split('T')[0],
                     updatedBy: 'Current User'
                 })
@@ -146,13 +174,13 @@ class EmployeeService {
             }
 
             const data = await response.json();
-            console.log('Update employee API response:', data);
+            console.log('Update attendance API response:', data);
             return {
                 success: true,
                 data: data
             };
         } catch (error) {
-            console.error('Error updating employee:', error);
+            console.error('Error updating attendance:', error);
             return {
                 success: false,
                 error: error.message,
@@ -161,14 +189,13 @@ class EmployeeService {
         }
     }
 
-    // Delete employee (make inactive)
-    static async deleteEmployee(employeeId) {
+    // Delete attendance record
+    static async deleteAttendance(attendanceId) {
         try {
-            const response = await corsEnabledFetch(`${API_BASE_URL}/admin/deleteEmployee`, {
+            const response = await corsEnabledFetch(`${API_BASE_URL}/admin/deleteAttendance`, {
                 method: 'POST',
                 body: JSON.stringify({
-                    id: employeeId,
-                    status: 'Inactive',
+                    id: attendanceId,
                     deletedDate: new Date().toISOString().split('T')[0],
                     deletedBy: 'Current User'
                 })
@@ -179,13 +206,13 @@ class EmployeeService {
             }
 
             const data = await response.json();
-            console.log('Delete employee API response:', data);
+            console.log('Delete attendance API response:', data);
             return {
                 success: true,
                 data: data
             };
         } catch (error) {
-            console.error('Error deleting employee:', error);
+            console.error('Error deleting attendance:', error);
             return {
                 success: false,
                 error: error.message,
@@ -194,13 +221,21 @@ class EmployeeService {
         }
     }
 
-    // Get single employee by ID
-    static async getEmployeeById(employeeId) {
+    // Get attendance statistics
+    static async getAttendanceStats(params = {}) {
+        const {
+            startDate = '',
+            endDate = '',
+            employeeId = ''
+        } = params;
+
         try {
-            const response = await corsEnabledFetch(`${API_BASE_URL}/admin/employeeDetails`, {
+            const response = await corsEnabledFetch(`${API_BASE_URL}/admin/attendanceStats`, {
                 method: 'POST',
                 body: JSON.stringify({
-                    id: employeeId
+                    startDate,
+                    endDate,
+                    employeeId
                 })
             });
 
@@ -209,66 +244,13 @@ class EmployeeService {
             }
 
             const data = await response.json();
-            console.log('Employee details API response:', data);
+            console.log('Attendance stats API response:', data);
             return {
                 success: true,
                 data: data
             };
         } catch (error) {
-            console.error('Error fetching employee:', error);
-            return {
-                success: false,
-                error: error.message,
-                data: null
-            };
-        }
-    }
-
-    // Bulk operations
-    static async bulkDeleteEmployees(employeeIds) {
-        try {
-            const response = await corsEnabledFetch(`${API_BASE_URL}/employees/bulk-delete`, {
-                method: 'POST',
-                body: JSON.stringify({ employeeIds })
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            return {
-                success: true,
-                data: data
-            };
-        } catch (error) {
-            console.error('Error bulk deleting employees:', error);
-            return {
-                success: false,
-                error: error.message,
-                data: null
-            };
-        }
-    }
-
-    // Export employees data
-    static async exportEmployees(format = 'csv') {
-        try {
-            const response = await corsEnabledFetch(`${API_BASE_URL}/employees/export?format=${format}`, {
-                method: 'GET'
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const blob = await response.blob();
-            return {
-                success: true,
-                data: blob
-            };
-        } catch (error) {
-            console.error('Error exporting employees:', error);
+            console.error('Error fetching attendance stats:', error);
             return {
                 success: false,
                 error: error.message,
@@ -278,4 +260,4 @@ class EmployeeService {
     }
 }
 
-export default EmployeeService;
+export default AttendanceService;

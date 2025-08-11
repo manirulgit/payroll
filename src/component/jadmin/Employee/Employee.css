@@ -609,6 +609,32 @@
   max-width: 120px;
 }
 
+/* Special handling for name column */
+.table tbody td:first-child {
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  max-width: 200px;
+  min-width: 180px;
+}
+
+/* Avatar styling in name column */
+.table tbody td .avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  flex-shrink: 0;
+  margin-right: 8px;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
 .table tbody tr:hover td {
   color: #3c4142;
   border-bottom-color: #d1d3e2;

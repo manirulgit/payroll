@@ -1,124 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Header from "../header";
+import AttendanceService from '../../../services/attendanceService';
+import EmployeeService from '../../../services/employeeService';
 import './Attendance.css';
-
-// Sample JSON data for attendance
-const attendanceData = [
-  {
-    id: 1,
-    employeeId: 'EMP001',
-    employeeName: 'John Doe',
-    date: '2025-07-01',
-    status: 'Present',
-    checkIn: '09:00',
-    checkOut: '17:30',
-    workingHours: '8.5'
-  },
-  {
-    id: 2,
-    employeeId: 'EMP002',
-    employeeName: 'Jane Smith',
-    date: '2025-07-01',
-    status: 'Present',
-    checkIn: '08:45',
-    checkOut: '17:15',
-    workingHours: '8.5'
-  },
-  {
-    id: 3,
-    employeeId: 'EMP003',
-    employeeName: 'Mike Johnson',
-    date: '2025-07-01',
-    status: 'Absent',
-    checkIn: '',
-    checkOut: '',
-    workingHours: '0'
-  },
-  {
-    id: 4,
-    employeeId: 'EMP001',
-    employeeName: 'John Doe',
-    date: '2025-07-02',
-    status: 'Present',
-    checkIn: '09:15',
-    checkOut: '17:45',
-    workingHours: '8.5'
-  },
-  {
-    id: 5,
-    employeeId: 'EMP002',
-    employeeName: 'Jane Smith',
-    date: '2025-07-02',
-    status: 'Late',
-    checkIn: '10:30',
-    checkOut: '18:30',
-    workingHours: '8'
-  },
-  {
-    id: 6,
-    employeeId: 'EMP003',
-    employeeName: 'Mike Johnson',
-    date: '2025-07-02',
-    status: 'Present',
-    checkIn: '08:30',
-    checkOut: '16:30',
-    workingHours: '8'
-  },
-  {
-    id: 7,
-    employeeId: 'EMP001',
-    employeeName: 'John Doe',
-    date: '2025-07-03',
-    status: 'Present',
-    checkIn: '09:00',
-    checkOut: '17:30',
-    workingHours: '8.5'
-  },
-  {
-    id: 8,
-    employeeId: 'EMP002',
-    employeeName: 'Jane Smith',
-    date: '2025-07-03',
-    status: 'Half Day',
-    checkIn: '09:00',
-    checkOut: '13:00',
-    workingHours: '4'
-  },
-  {
-    id: 9,
-    employeeId: 'EMP004',
-    employeeName: 'Sarah Wilson',
-    date: '2025-07-03',
-    status: 'Present',
-    checkIn: '08:45',
-    checkOut: '17:15',
-    workingHours: '8.5'
-  },
-  {
-    id: 10,
-    employeeId: 'EMP001',
-    employeeName: 'John Doe',
-    date: '2025-07-31',
-    status: 'Present',
-    checkIn: '09:00',
-    checkOut: '17:30',
-    workingHours: '8.5'
-  },
-  {
-    id: 11,
-    employeeId: 'EMP002',
-    employeeName: 'Jane Smith',
-    date: '2025-07-31',
-    status: 'Present',
-    checkIn: '08:45',
-    checkOut: '17:15',
-    workingHours: '8.5'
-  }
-];
 
 function Attendance() {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [filteredData, setFilteredData] = useState(attendanceData);
+  const [attendanceData, setAttendanceData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [dateRange, setDateRange] = useState({
     startDate: '',
     endDate: ''
@@ -126,27 +18,79 @@ function Attendance() {
   const [selectedEmployee, setSelectedEmployee] = useState('all');
   const [viewMode, setViewMode] = useState('calendar'); // 'calendar' or 'list'
 
-  // Get unique employees for filter dropdown
-  const employees = [...new Set(attendanceData.map(record => record.employeeName))];
+  // Fetch attendance data from API
+  const fetchAttendanceData = async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const params = {
+        page: 1,
+        size: 1000, // Get all records for calendar view
+        startDate: dateRange.startDate,
+        endDate: dateRange.endDate,
+        employeeId: selectedEmployee !== 'all' ? selectedEmployee : ''
+      };
+
+      const response = await AttendanceService.getAttendance(params);
+      
+      if (response.success && response.data) {
+        // Transform API data to match component structure
+        const transformedData = response.data.map(record => ({
+          id: record.id,
+          employeeId: record.employee_id || record.employeeId,
+          employeeName: record.employee_name || record.employeeName,
+          date: record.attendance_date || record.date,
+          status: record.status,
+          checkIn: record.check_in || record.checkIn,
+          checkOut: record.check_out || record.checkOut,
+          workingHours: record.working_hours || record.workingHours || '0'
+        }));
+        
+        setAttendanceData(transformedData);
+        setFilteredData(transformedData);
+      } else {
+        throw new Error(response.error || 'Failed to fetch attendance data');
+      }
+    } catch (error) {
+      console.error('Error fetching attendance:', error);
+      setError(error.message);
+      setAttendanceData([]);
+      setFilteredData([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch employees list for dropdown
+  const fetchEmployees = async () => {
+    try {
+      const response = await EmployeeService.getEmployees({ page: 1, size: 1000 });
+      
+      if (response.success && response.data) {
+        // Extract unique employee names
+        const employeeList = response.data.map(emp => ({
+          id: emp.id,
+          name: emp.name || emp.employee_name || `${emp.first_name} ${emp.last_name}`.trim(),
+          employeeId: emp.employee_id || emp.employeeId
+        }));
+        
+        setEmployees(employeeList);
+      }
+    } catch (error) {
+      console.error('Error fetching employees:', error);
+    }
+  };
+
+  // Initial data fetch
+  useEffect(() => {
+    fetchEmployees();
+    fetchAttendanceData();
+  }, []);
 
   // Filter data based on date range and employee
   useEffect(() => {
-    let filtered = attendanceData;
-
-    if (dateRange.startDate && dateRange.endDate) {
-      filtered = filtered.filter(record => {
-        const recordDate = new Date(record.date);
-        const start = new Date(dateRange.startDate);
-        const end = new Date(dateRange.endDate);
-        return recordDate >= start && recordDate <= end;
-      });
-    }
-
-    if (selectedEmployee !== 'all') {
-      filtered = filtered.filter(record => record.employeeName === selectedEmployee);
-    }
-
-    setFilteredData(filtered);
+    fetchAttendanceData();
   }, [dateRange, selectedEmployee]);
 
   // Generate calendar days
@@ -195,6 +139,12 @@ function Attendance() {
       ...prev,
       [name]: value
     }));
+  };
+
+  // Handle clear filters
+  const handleClearFilters = () => {
+    setDateRange({ startDate: '', endDate: '' });
+    setSelectedEmployee('all');
   };
 
   // Get status color class
@@ -246,8 +196,10 @@ function Attendance() {
               className="form-control"
             >
               <option value="all">All Employees</option>
-              {employees.map((employee, index) => (
-                <option key={index} value={employee}>{employee}</option>
+              {employees.map((employee) => (
+                <option key={employee.id} value={employee.employeeId}>
+                  {employee.name}
+                </option>
               ))}
             </select>
           </div>
@@ -275,18 +227,37 @@ function Attendance() {
           </div>
           
           <button 
-            onClick={() => {
-              setDateRange({ startDate: '', endDate: '' });
-              setSelectedEmployee('all');
-            }}
+            onClick={handleClearFilters}
             className="btn btn-secondary"
           >
             Clear Filters
           </button>
         </div>
 
+        {/* Loading and Error States */}
+        {loading && (
+          <div className="text-center p-4">
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p className="mt-2">Loading attendance data...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="alert alert-danger" role="alert">
+            <strong>Error:</strong> {error}
+            <button 
+              className="btn btn-outline-danger btn-sm ms-2"
+              onClick={fetchAttendanceData}
+            >
+              Retry
+            </button>
+          </div>
+        )}
+
         {/* Calendar View */}
-        {viewMode === 'calendar' && (
+        {!loading && !error && viewMode === 'calendar' && (
           <div className="calendar-view">
             <div className="calendar-header">
               <button onClick={() => navigateMonth(-1)} className="btn btn-outline-primary">
@@ -332,7 +303,7 @@ function Attendance() {
         )}
 
         {/* List View */}
-        {viewMode === 'list' && (
+        {!loading && !error && viewMode === 'list' && (
           <div className="list-view">
             <div className="attendance-table">
               <table className="table table-striped">
@@ -376,6 +347,7 @@ function Attendance() {
         )}
 
         {/* Statistics */}
+        {!loading && !error && (
         <div className="attendance-stats">
           <div className="stats-card">
             <h3>Total Records</h3>
@@ -398,6 +370,7 @@ function Attendance() {
             <p>{filteredData.filter(r => r.status === 'Half Day').length}</p>
           </div>
         </div>
+        )}
       </div>
     </div>
   );
